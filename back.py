@@ -1,23 +1,27 @@
-import pandas as pd
-from flask import Flask, render_template
+from flask import Flask, request, jsonify
 
 app = Flask(__name__)
-data_file = "./datas/Book.csv"  # Uisti sa, že cesta k súboru je správna
 
-df = pd.DataFrame()
+@app.route('/process_data', methods=['POST'])
+def process_data():
+    try:
+        # Získame údaje z požiadavky
+        data = request.get_json()
 
-# Load the CSV file
-def load_data():
-    return pd.read_csv(data_file, delimiter=";")
+        # Získanie údajov zo JSON objektu
+        name = data.get('name')
+        who = data.get('who')
+        date = data.get('date')
+        why = data.get('why')
 
-# Function that adds new data to the DataFrame
-def new_datas(name, who_name, reason, date):
-    new_data = pd.DataFrame({'Person': [name], 'Meet with': [who_name], 'Why': [reason], 'Date': [date]})
-    return new_data
+        # Tu môžeš spracovať údaje, napríklad ich uložiť do databázy alebo ich logovať
+        print(f"Name: {name}, Who: {who}, Date: {date}, Why: {why}")
 
-# Save the updated DataFrame to CSV
-def save_data(df):
-    df.to_csv(data_file, index=False, sep=";")
+        # Odpoveď, ktorá sa pošle na front-end
+        return jsonify({"status": "success", "message": "Data received successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
 
 if __name__ == "__main__":
     app.run(debug=True)
