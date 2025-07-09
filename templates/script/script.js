@@ -7,11 +7,8 @@ function addInfo()
     var date = document.getElementById("date_id").value;
     var why = document.getElementById("why_id").value;
 
-    //jendoduchy vypis do konzole
-    console.log(name , who, date, why)
-
     // Poslanie dát na server pomocou fetch
-    fetch('/process_data', {
+    fetch('http://localhost:5000/process_data', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name , who, date, why })  // Kratšia verzia zápisu (ES6)
