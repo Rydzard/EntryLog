@@ -8,7 +8,7 @@ function addInfo()
     var why = document.getElementById("why_id").value;
 
     // Poslanie dát na server pomocou fetch
-    fetch('http://localhost:5000/process_data', {
+    fetch('localhost:5000/process_data', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name , who, date, why })  // Kratšia verzia zápisu (ES6)
@@ -17,4 +17,9 @@ function addInfo()
     .then(data => alert(data.message))  // Zobrazíme správu zo servera
     .catch(console.error);  // Zobrazíme chybu, ak nejaká nastane
 
+}
+
+function showOptions()
+{
+    console.log("Bla bla")
 }

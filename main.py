@@ -1,12 +1,12 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-import pandas as pd
+from flask import Flask, request ,jsonify
+
+from pandas import read_csv
 app = Flask(__name__)
-CORS(app)  # Povolenie CORS pre celú aplikáciu
+
+datasets = "datas/Book.csv"
 
 def join_database(filepath):
-    return pd.read_csv(filepath)
-
+    return read_csv(filepath)
 
 @app.route('/process_data', methods=['POST'])
 def process_data():
@@ -28,6 +28,7 @@ def process_data():
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 400
+
 
 if __name__ == "__main__":
     app.run(debug=True)
