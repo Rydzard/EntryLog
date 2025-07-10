@@ -1,15 +1,19 @@
 from flask import Flask, request ,jsonify
 
-from pandas import read_csv
-app = Flask(__name__)
+import pandas as pd
+from flask_cors import CORS
 
-datasets = "datas/Book.csv"
+app = Flask(__name__)
+CORS(app)
+
+path_to_database_guests = "datas/guests.csv"
+path_to_database_employee = "datas/employee.csv"
 
 def join_database(filepath):
-    return read_csv(filepath)
+    return pd.read_csv(filepath)
 
-@app.route('/process_data', methods=['POST'])
-def process_data():
+@app.route('/add_guest', methods=['POST'])
+def add_guest():
     try:
         # Získame údaje z požiadavky
         data = request.get_json()
@@ -19,9 +23,18 @@ def process_data():
         who = data.get('who')
         date = data.get('date')
         why = data.get('why')
+        
+        database_guests = join_database(path_to_database_guests)
 
-        # Tu môžeš spracovať údaje, napríklad ich uložiť do databázy alebo ich logovať
-        print(f"Name: {name}, Who: {who}, Date: {date}, Why: {why}")
+        new_guest = pd.DataFrame([{
+            'Kto prišiel': name,
+            'Ku komu': who,
+            'Čas': date,
+            'Prečo': why
+        }])
+        
+        new_data_df = pd.concat([new_guest,database_guests], ignore_index=True)
+        new_data_df.to_csv(path_to_database_guests, mode='w', header=True, index=False)
 
         # Odpoveď, ktorá sa pošle na front-end
         return jsonify({"status": "success", "message": "Data received successfully"}), 200
@@ -29,6 +42,14 @@ def process_data():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 400
 
+@app.route('/load_guests', methods=['GET'])
+def load_guests():
+
+    database_guests = join_database(path_to_database_guests)
+    database_guests["Možnosti"] = '<button onclick="showOptions()" class="moreButton">...</button>'
+    html_table = database_guests.to_html(escape=False, index=False, table_id="table_of_guests")
+
+    return html_table, 200  # vraciaš HTML tabuľku ako text
 
 if __name__ == "__main__":
     app.run(debug=True)

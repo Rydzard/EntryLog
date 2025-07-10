@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="styles/style.css">
-    <script src="script/script.js"></script>
 </head> 
 <body>
     <header>
@@ -14,47 +13,14 @@
     <main>
         <!-- Tlačidlo, ktoré otvorí modálne okno -->
         
-        <div class="personInfo">
-            <table>
-                <tr>
-                    <th>Kto prišiel</th>
-                    <th>Ku komu</th>
-                    <th>Dôvod</th>
-                    <th>Čas</th>
-                    <th>Zmeniť</th>
-                </tr>
-                <tr>
-                    <td>Jano</td>
-                    <td>Peter</td>
-                    <td>Country</td>
-                    <td>Country</td>
-                    <td><button onclick="showOptions()" class="moreButton">...</button></td>
-                </tr>
-                <tr>
-                    <td>Company</td>
-                    <td>Contact</td>
-                    <td>Country</td>
-                    <td>Country</td>
-                    <td><button onclick="showOptions()" class="moreButton">...</button></td>
-                </tr>
-                <tr>
-                    <td>Company</td>
-                    <td>Contact</td>
-                    <td>Country</td>
-                    <td>Country</td>
-                    <td><button onclick="showOptions()" class="moreButton">...</button></td>
-                </tr>
-                <tr>
-                    <td>Company</td>
-                    <td>Contact</td>
-                    <td>Country</td>
-                    <td>Country</td>
-                    <td><button onclick="showOptions()" class="moreButton">...</button></td>
-                </tr>
-            </table>
+        <div id="personInfo" class="personInfo">
+
         </div>
 
-      <input id="name_id"> <input id="who_id"> <input type="datetime-local" id="date_id"> <input id="why_id"> <button onclick="addInfo()">Test RFID</button>
+      <input id="name_id"> <input id="who_id"> <input type="datetime-local" id="date_id"> <input id="why_id"> <button onclick="add_guest()">Pridať návštevníka</button>
+      <br><br><br>
+      <input id="search_input_guests"> <button onclick="seatch_guest_button()">Hľadať návštevníka</button>
+      <script src="script/script.js"></script>
     </main>
 </body>
 </html>
