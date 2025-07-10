@@ -51,5 +51,17 @@ def load_guests():
 
     return html_table, 200  # vraciaš HTML tabuľku ako text
 
+@app.route('/search_guests', methods=['POST'])
+def search_guests():
+    data = request.json 
+    print(data)
+
+    data_guests = join_database(path_to_database_guests)
+    name = data.get('search_input')
+
+    print(name)
+    #data_guests.query("Kto prišiel" == data[0])
+    return data,200
+
 if __name__ == "__main__":
     app.run(debug=True)

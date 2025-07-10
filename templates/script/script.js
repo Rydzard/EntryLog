@@ -43,7 +43,7 @@ function add_guest()
 
 function load_guests_table()
 {
-    fetch('http://localhost:5000//load_guests')
+    fetch('http://localhost:5000/load_guests')
         .then(response => response.text())
         .then(html => {
             document.getElementById("personInfo").innerHTML = html;
@@ -58,8 +58,23 @@ function showOptions()
     console.log("Bla bla")
 }
 
-function seatch_guest_button(){
-    console.log("Bla bla")
+function search_guest_button(){
+    var search_input = document.getElementById("search_input_guests").value.trim();
+
+    if(!search_input)
+    {
+       return alert("Treba pridat do searchu meno zamestnanca")
+    }
+
+    console.log(search_input)
+
+    fetch('http://localhost:5000/search_guests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({search_input})  // Kratšia verzia zápisu (ES6)
+    })
+    .then(response => response.json())
+    .catch(console.error)
 }
 
 load_guests_table();
