@@ -70,11 +70,11 @@ def search_guests():
     print(data)
 
     data_guests = join_database(path_to_database_guests)
-    name = data.get('search_input')
+    input_string = data.get('search_input')
 
     globals()['data_guests'] = data_guests
 
-    query = f'SELECT * FROM data_guests WHERE "Kto prišiel" = "{name}"'
+    query = f'SELECT * FROM data_guests WHERE "Kto prišiel" LIKE "{input_string}%"'
     vysledok = pysqldf(query)
 
     vysledok["Možnosti"] = '<button onclick="showOptions()" class="moreButton">...</button>'

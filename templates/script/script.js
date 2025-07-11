@@ -63,7 +63,8 @@ function search_guest_button(){
 
     if(!search_input)
     {
-       return alert("Treba pridat do searchu meno zamestnanca")
+        load_guests_table()
+        return
     }
 
     console.log(search_input)
@@ -78,6 +79,8 @@ function search_guest_button(){
         document.getElementById("personInfo").innerHTML = html;
     })
     .catch(console.error)
+
+    document.getElementById("search_input_guests").value = ""
 }
 
 load_guests_table();
