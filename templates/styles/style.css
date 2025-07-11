@@ -2,6 +2,10 @@ body {
     background:linear-gradient(to right,#000428,#004e92);
 }
 
+p{
+    color: #f2f2f2;
+}
+
 h1{
     color: rgb(219, 219, 219);
     text-align: center;
