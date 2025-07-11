@@ -83,4 +83,28 @@ function search_guest_button(){
     document.getElementById("search_input_guests").value = ""
 }
 
+function delete_guest_button()
+{
+    var delete_input = document.getElementById("delete_input_guests").value.trim();
+    if(!delete_input)
+    {
+        return alert("Treba nastavit meno na vymazávanie do vyhľadávača (input)")
+    }
+
+    console.log(delete_input)
+
+    fetch('http://localhost:5000/delete_guests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({delete_input})  // Kratšia verzia zápisu (ES6)
+    })
+    .then(response => response.text())
+    .then(html => {
+        document.getElementById("personInfo").innerHTML = html;
+    })
+    .catch(console.error)
+
+    load_guests_table();
+}
+
 load_guests_table();

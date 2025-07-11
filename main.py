@@ -67,8 +67,6 @@ def load_guests():
 @app.route('/search_guests', methods=['POST'])
 def search_guests():
     data = request.json 
-    print(data)
-
     data_guests = join_database(path_to_database_guests)
     input_string = data.get('search_input')
 
@@ -80,9 +78,28 @@ def search_guests():
     vysledok["Možnosti"] = '<button onclick="showOptions()" class="moreButton">...</button>'
     html_table = vysledok.to_html(escape=False, index=False, table_id="table_of_guests")
 
-    print(html_table)
+    return html_table,200
 
-    #data_guests.query("Kto prišiel" == data[0])
+
+@app.route('/delete_guests', methods=['POST'])
+def delete_guests():
+    data = request.json
+
+    data_guests = join_database(path_to_database_guests)
+    input_string = data.get('delete_input')
+    #globals()['data_guests'] = data_guests
+
+    print(input_string)
+
+    delete_guest = data_guests[data_guests['Kto prišiel'] != input_string]
+
+    delete_guest.to_csv(path_to_database_guests, mode='w', header=True, index=False)
+    # query = f'DELETE FROM data_guests WHERE "Kto prišiel" != \'{input_string}\''
+    # print(query)
+    # deleted_guest = pysqldf(query)
+    print(delete_guest)
+    html_table = delete_guest.to_html(escape=False, index=False, table_id="table_of_guests")
+
     return html_table,200
 
 if __name__ == "__main__":
