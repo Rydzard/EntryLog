@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles/registration_style.css">
+</head>
+
+<body>
+
+        <header>
+        <ul>
+           <li> <h1>IMET</h1> </li>
+          
+            <li>
+                <a href="registration.html">Registrácia</a>
+            </li>
+
+            <li>
+                <a href="index.html">Návštevníci</a>
+            </li>
+
+            <li>
+                <a href="#">Zamestnanci</a>
+            </li>
+
+            <li>
+                <a href="history.html">História vrátenia</a>
+            </li>
+        </ul>
+
+    </header>
+
+    <main>
+        <div style="max-width: 400px; padding: 20px; border: 1px solid #ccc; border-radius: 8px; font-family: Arial, sans-serif;">
+            <p>Meno</p>
+            <input id="name_id"> 
+
+            <p>Za kým</p>
+            <input id="who_id"> 
+
+            <p>Do kedy</p>
+            <input type="date" id="date_id"> 
+            
+            <p>Prečo</p>
+            <input id="why_id"> 
+            <button onclick="add_guest()">Pridať návštevníka</button>
+        </div>
+
+        <script src="script/registration.js"></script>
+    </main>  
+</body>
+
+
