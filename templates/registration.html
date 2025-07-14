@@ -22,7 +22,7 @@
             </li>
 
             <li>
-                <a href="#">Zamestnanci</a>
+                <a href="employee.html">Zamestnanci</a>
             </li>
 
             <li>
@@ -33,7 +33,7 @@
     </header>
 
     <main>
-        <div style="max-width: 400px; padding: 20px; border: 1px solid #ccc; border-radius: 8px; font-family: Arial, sans-serif;">
+        <div>
             <p>Meno</p>
             <input id="name_id"> 
 
@@ -44,7 +44,12 @@
             <input type="date" id="date_id"> 
             
             <p>Prečo</p>
-            <input id="why_id"> 
+            <select id="why_id">
+                <option value="Návšteva">Návšteva</option>
+                <option value="Pohovor">Pohovor</option>
+                <option value="mercedes">Mercedes</option>
+                <option value="audi">Audi</option>
+            </select> 
             <button onclick="add_guest()">Pridať návštevníka</button>
         </div>
 

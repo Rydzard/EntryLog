@@ -92,7 +92,7 @@ def add_history(input_string, data_guests, path_to_database_history):
     })
 
     # Pridá nový záznam do histórie
-    updated_history = pd.concat([database_history, new_entry], ignore_index=True)
+    updated_history = pd.concat([new_entry,database_history], ignore_index=True)
 
     # Uloží aktualizovanú históriu
     updated_history.to_csv(path_to_database_history, mode='w', header=True, index=False)
