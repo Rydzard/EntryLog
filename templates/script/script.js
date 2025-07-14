@@ -12,7 +12,8 @@ function load_guests_table()
 
 function showOptions()
 {
-    console.log("Bla bla")
+    const myWindow = window.open("", "", "width=800,height=500");
+    myWindow.document.body.innerHTML = "<h1>Info navštevnika</h1>"
 }
 
 function search_guest_button(){
