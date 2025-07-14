@@ -20,8 +20,6 @@ def join_database(filepath):
 @app.route('/add_guest', methods=['POST'])
 def add_guest():
     try:
-
-        print("Tu voslo")
         # Získame údaje z požiadavky
         data = request.get_json()
 
@@ -32,13 +30,9 @@ def add_guest():
         why = data.get('why')
         currentTime = data.get('currentTime')
         chip_number = data.get('chip')
-        print(int(chip_number))
-        print(currentTime)
 
         database_guests = join_database(path_to_database_guests)
 
-        print("Tu sa vypisal datum")
-        print(date)
         new_guest = pd.DataFrame([{
             'Kto prišiel': name,
             'Ku komu': who,
@@ -97,9 +91,6 @@ def add_history(input_string, data_guests, path_to_database_history):
     # Uloží aktualizovanú históriu
     updated_history.to_csv(path_to_database_history, mode='w', header=True, index=False)
 
-    print("Záznam pridaný do histórie:")
-    print(new_entry)
-
 
 @app.route('/search_guests', methods=['POST'])
 def search_guests():
@@ -124,14 +115,10 @@ def delete_guests():
 
     data_guests = join_database(path_to_database_guests)
     input_string = data.get('delete_input')
-    #globals()['data_guests'] = data_guests
 
     delete_guest = data_guests[data_guests['Čip'] != int(input_string)]
 
     delete_guest.to_csv(path_to_database_guests, mode='w', header=True, index=False)
-    # query = f'DELETE FROM data_guests WHERE "Kto prišiel" != \'{input_string}\''
-    # print(query)
-    # deleted_guest = pysqldf(query)
     html_table = delete_guest.to_html(escape=False, index=False, table_id="table_of_guests")
 
     add_history(input_string,data_guests,path_to_database_history)

@@ -7,8 +7,6 @@ function add_guest()
     var why = document.getElementById("why_id").value.trim();
     var currentTime = getCurrentTime().toString();
 
-    console.log(name,who,dateStr,why,currentTime)
-
 
     // prevod reťazca na objekt Date
     var date = new Date(dateStr);
@@ -18,8 +16,6 @@ function add_guest()
 
     var formattedDate = `${day}.${month}.${year}`;
 
-    console.log(formattedDate);
-
     // overenie vstupov
     if (!name || !currentTime || !who || !formattedDate || !why) {
         alert("Zadaj všetky povinné údaje (meno, kto pozval, dátum a dôvod)");
@@ -27,8 +23,6 @@ function add_guest()
     }
 
     chip = prompt("Priložte kartu")
-
-    console.log(chip)
 
     // Poslanie dát na server pomocou fetch
     fetch('http://localhost:5000/add_guest', {

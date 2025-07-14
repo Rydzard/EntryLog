@@ -1,7 +1,5 @@
 function searchEmployee()
 {
-    console.log("Vosiel")
-
     var input = document.getElementById("name_id").value.trim()
     if(!input)
     {
