@@ -11,6 +11,7 @@ CORS(app)
 path_to_database_guests = "datas/guests.csv"
 path_to_database_employee = "datas/employee.csv"
 path_to_database_history = "datas/history.csv"
+path_to_database_keys = "datas/keys.csv"
 
 pysqldf = lambda q: sqldf(q, globals())
 
@@ -55,7 +56,11 @@ def add_guest():
 def load_guests():
 
     database_guests = join_database(path_to_database_guests)
-    database_guests["Možnosti"] = '<button onclick="showOptions()" class="moreButton">...</button>'
+       # Použijeme index riadku ako jedinečný identifikátor pre tlačidlo
+    database_guests["Možnosti"] = database_guests.index.to_series().apply(
+        lambda idx: f'<button onclick="showOptions({idx})" class="moreButton">...</button>'
+    )
+
     html_table = database_guests.to_html(escape=False, index=False, table_id="table_of_guests")
 
     return html_table, 200  # vraciaš HTML tabuľku ako text
@@ -125,5 +130,62 @@ def delete_guests():
 
     return html_table,200
 
+@app.route('/render_employee', methods=['POST'])
+def render_employee():
+    try:
+        data = request.get_json()
+        input = data.get('input_string')
+        
+        employee_dataset = join_database(path_to_database_employee)
+
+        if isinstance(input, int):
+            employee_dataset = employee_dataset[employee_dataset['Čip'] == input]
+        else:
+            employee_dataset = employee_dataset[employee_dataset['Meno'] == input]
+
+        html_table_keys = render_keys(employee_dataset.iloc[0]["Meno"])
+        
+        employee_data = [{
+            "name": employee_dataset.iloc[0]["Meno"],
+            "chip": int(employee_dataset.iloc[0]["Čip"]),
+            "department": employee_dataset.iloc[0]["Pracovisko"],
+            "keys_table": html_table_keys
+        }]
+
+        return jsonify(employee_data), 200
+    
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
+    
+def render_keys(info):
+
+    keys_dataset = join_database(path_to_database_keys)
+    keys_dataset = keys_dataset[keys_dataset['Meno'] == info]
+    del keys_dataset['Meno']
+    html_table = keys_dataset.to_html(escape=False, index=False, table_id="table_of_guests")
+    return html_table
+
+
+@app.route('/show_options', methods=['POST'])
+def show_options():
+    try:
+        data = request.json
+        id_number = data.get('id')
+        
+        guests_dataset = join_database(path_to_database_guests)
+        guests_name = guests_dataset.iloc[id_number]["Kto prišiel"]
+
+        html_table_keys = render_keys(guests_name)
+
+        guess_data = [{
+            "name": guests_dataset.iloc[id_number]["Kto prišiel"],
+            "chip": int(guests_dataset.iloc[id_number]["Čip"]),
+            "keys_table": html_table_keys
+        }]
+
+        return jsonify(guess_data), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(port=5000,debug=True)
