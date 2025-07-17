@@ -10,33 +10,6 @@ function load_guests_table()
         });
 }
 
-function showOptions(id) {
-    fetch('http://localhost:5000/show_options', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id })
-    })
-    .then(response => response.json())  // Spracovanie ako JSON
-    .then(data => {
-        console.log("Parsed JSON data:", data);
-        var meno = data[0].name;
-        var čip = data[0].chip;
-
-        const myWindow = window.open("", "", "width=800,height=500");
-
-        const cssURL = "styles/style.css"; 
-
-        const link = myWindow.document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = cssURL;
-        myWindow.document.head.appendChild(link);
-
-        myWindow.document.body.innerHTML = "<h1>Info návštevníka</h1> <br> <p> Meno:" + meno + "</p> <br> <p>Čip:" + čip + 
-                                            "</p> <br>" + data[0].keys_table;
-    })
-    .catch(console.error);
-}
-
 function search_guest_button(){
     var search_input = document.getElementById("search_input_guests").value.trim();
 
