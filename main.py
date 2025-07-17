@@ -243,10 +243,7 @@ def return_keys():
         match = keys_database[(keys_database['Meno'] == name) & (keys_database['Klúč'] == key)]
 
         if match.empty:
-            return jsonify({
-                "status": "error",
-                "message": f"Kľúč '{key}' nie je priradený zamestnancovi '{name}'."
-            }), 400
+            return jsonify({ "status": "error", "message": f"Kľúč '{key}' nie je priradený zamestnancovi '{name}'."}), 400
 
         # Odstrániť záznam
         keys_database = keys_database[~((keys_database['Meno'] == name) & (keys_database['Klúč'] == key))]
@@ -265,6 +262,22 @@ def load_keys_database():
     html_table = key_database.to_html(escape=False, index=False, table_id="table_of_guests")
 
     return html_table, 200  # vraciaš HTML tabuľku ako text
+
+@app.route('/search_key', methods=['POST'])
+def search_key():
+
+    data = request.get_json()
+    key = data.get('key_number')
+
+    key_database = join_database(path_to_database_keys)
+
+    key_database = key_database[key_database['Klúč'] == int(key)]
+
+    html_table = key_database.to_html(escape=False, index=False, table_id="table_of_guests")
+
+
+    return html_table, 200  # vraciaš HTML tabuľku ako text
+
 
 if __name__ == "__main__":
     app.run(port=5000,debug=True)
