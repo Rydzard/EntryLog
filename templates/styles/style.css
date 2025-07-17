@@ -1,68 +1,86 @@
 body {
-    background:linear-gradient(to right,#000428,#004e92);
+    background: linear-gradient(to right, #000428, #004e92);
 }
 
-p{
+p {
     color: #f2f2f2;
 }
 
-h1{
+h1 {
     color: rgb(219, 219, 219);
     text-align: center;
     font-size: 4rem;
 }
 
-.personInfo{
+.personInfo {
     background-color: rgb(226, 226, 226);
     margin-left: 20rem;
     margin-right: 20rem;
 }
 
-.moreButton{
+.moreButton {
     font-size: 2rem;
     margin-bottom: 1rem;
-    border: none; /* Odstránené okraje */
+    border: none;
+    /* Odstránené okraje */
     background-color: rgba(241, 238, 238, 0);
 }
 
-.moreButton:hover{
+.moreButton:hover {
     text-align: center;
     color: #ca2929;
 }
 
 /* Celkové nastavenie tabuľky */
 table {
-    width: 100%; /* Tabuľka zaberá celú šírku */
-    border-collapse: collapse; /* Zbavíme sa medzier medzi bunkami */
-    margin: 20px 0; /* Vzdialenosť od ostatného obsahu */
-    font-family: Arial, sans-serif; /* Písmo pre tabuľku */
+    width: 100%;
+    /* Tabuľka zaberá celú šírku */
+    border-collapse: collapse;
+    /* Zbavíme sa medzier medzi bunkami */
+    margin: 20px 0;
+    /* Vzdialenosť od ostatného obsahu */
+    font-family: Arial, sans-serif;
+    /* Písmo pre tabuľku */
 }
 
 /* Hlavička tabuľky */
 th {
-    background-color: #4CAF50; /* Zelené pozadie */
-    color: white; /* Biely text */
-    padding: 12px 15px; /* Vnútorné okraje (padding) */
-    text-align: left; /* Zarovnanie textu vľavo */
-    font-size: 18px; /* Veľkosť textu */
-    font-weight: bold; /* Tučný text */
+    background-color: #4CAF50;
+    /* Zelené pozadie */
+    color: white;
+    /* Biely text */
+    padding: 12px 15px;
+    /* Vnútorné okraje (padding) */
+    text-align: left;
+    /* Zarovnanie textu vľavo */
+    font-size: 18px;
+    /* Veľkosť textu */
+    font-weight: bold;
+    /* Tučný text */
 }
 
 /* Riadky tabuľky */
 td {
-    padding: 12px 15px; /* Vnútorné okraje (padding) */
-    text-align: left; /* Zarovnanie textu vľavo */
-    border: 1px solid #ddd; /* Svetlé šedé okraje buniek */
+    padding: 12px 15px;
+    /* Vnútorné okraje (padding) */
+    text-align: left;
+    /* Zarovnanie textu vľavo */
+    border: 1px solid #ddd;
+    /* Svetlé šedé okraje buniek */
 }
 
 /* Striedanie farieb riadkov */
 tr:nth-child(even) {
-    background-color:   #f2f2f2; /* Svetlo šedá farba pre párne riadky */
+    background-color: #f2f2f2;
+    /* Svetlo šedá farba pre párne riadky */
 }
 
 /* Okraje okolo celej tabuľky */
-table, th, td {
-    border: 1px solid #ddd; /* Svetlo šedé okraje */
+table,
+th,
+td {
+    border: 1px solid #ddd;
+    /* Svetlo šedé okraje */
     text-align: center;
 }
 
@@ -70,21 +88,24 @@ table, th, td {
 /* Prispôsobenie pre mobilné zariadenia */
 @media screen and (max-width: 600px) {
     table {
-        width: 100%; /* Tabuľka zaberá celú šírku pri malých obrazovkách */
+        width: 100%;
+        /* Tabuľka zaberá celú šírku pri malých obrazovkách */
     }
 
-    th, td {
-        padding: 8px; /* Menšie vnútorné okraje na mobiloch */
+    th,
+    td {
+        padding: 8px;
+        /* Menšie vnútorné okraje na mobiloch */
     }
 }
 
 
 
-    * {
-        padding: 0;
-        margin: 0;
-        font-family: 'Poppins', monospace;
-    }
+* {
+    padding: 0;
+    margin: 0;
+    font-family: 'Poppins', monospace;
+}
 
 ul {
     list-style: none;

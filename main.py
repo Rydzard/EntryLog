@@ -56,11 +56,6 @@ def add_guest():
 def load_guests():
 
     database_guests = join_database(path_to_database_guests)
-       # Použijeme index riadku ako jedinečný identifikátor pre tlačidlo
-    database_guests["Možnosti"] = database_guests.index.to_series().apply(
-        lambda idx: f'<button onclick="showOptions({idx})" class="moreButton">...</button>'
-    )
-
     html_table = database_guests.to_html(escape=False, index=False, table_id="table_of_guests")
 
     return html_table, 200  # vraciaš HTML tabuľku ako text
@@ -99,7 +94,7 @@ def add_history(input_string, data_guests, path_to_database_history):
 
 @app.route('/search_guests', methods=['POST'])
 def search_guests():
-    data = request.json 
+    data = request.get_json() 
     data_guests = join_database(path_to_database_guests)
     input_string = data.get('search_input')
 
@@ -108,7 +103,6 @@ def search_guests():
     query = f'SELECT * FROM data_guests WHERE "Kto prišiel" LIKE "{input_string}%"'
     vysledok = pysqldf(query)
 
-    vysledok["Možnosti"] = '<button onclick="showOptions()" class="moreButton">...</button>'
     html_table = vysledok.to_html(escape=False, index=False, table_id="table_of_guests")
 
     return html_table,200
@@ -116,7 +110,7 @@ def search_guests():
 
 @app.route('/delete_guests', methods=['POST'])
 def delete_guests():
-    data = request.json
+    data = request.get_json()
 
     data_guests = join_database(path_to_database_guests)
     input_string = data.get('delete_input')
@@ -169,7 +163,7 @@ def render_keys(info):
 @app.route('/show_options', methods=['POST'])
 def show_options():
     try:
-        data = request.json
+        data = request.get_json()
         id_number = data.get('id')
         
         guests_dataset = join_database(path_to_database_guests)
@@ -186,6 +180,91 @@ def show_options():
         return jsonify(guess_data), 200
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 400
+
+
+@app.route('/add_key', methods=['POST'])
+def add_key():
+    try:
+        data = request.get_json()
+        
+        name = data.get('name')
+        key = data.get('key')
+        date = data.get('date_id')
+        why = data.get('why_id')
+
+        if not date and not why:
+            date = "Nepriradené"
+            why = "Nepriradené"
+
+        print(name, key, date, why)
+
+        employeers_database = join_database(path_to_database_employee)
+        keys_database = join_database(path_to_database_keys)
+
+        key = str(data.get('key')).strip()
+        keys_database['Klúč'] = keys_database['Klúč'].astype(str).str.strip()
+
+        if key in keys_database['Klúč'].values:
+            print("KLÚČ sa už nachádza v databáze!")
+            return jsonify({"status": "error", "message": "Tento kľúč už je vydaný!"}), 400
+
+        if name not in employeers_database['Meno'].values:
+            print("Zamestnanec sa nenašiel!")
+            return jsonify({"status": "error", "message": f"Meno '{name}' neexistuje v databáze zamestnancov."}), 400
+        
+        new_add_key = pd.DataFrame({
+            "Klúč": [key],
+            "Meno": [name],
+            "Prečo": [why],
+            "Kedy": [date]
+        })
+
+        keys_database = pd.concat([new_add_key, keys_database], ignore_index=True)
+        keys_database.to_csv(path_to_database_keys, mode='w', header=True, index=False)
+
+        return jsonify({"status": "success", "message": "Údaje boli úspešne uložené."}), 200
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
+
+@app.route('/return_keys', methods=['POST'])
+def return_keys():
+    try:
+        data = request.get_json()
+
+        name = str(data.get('name_return')).strip()
+        key = str(data.get('key_return')).strip()
+
+        keys_database = join_database(path_to_database_keys)
+        keys_database['Meno'] = keys_database['Meno'].astype(str).str.strip()
+        keys_database['Klúč'] = keys_database['Klúč'].astype(str).str.strip()
+
+        # Skontroluj, či daný záznam existuje (Meno + Klúč)
+        match = keys_database[(keys_database['Meno'] == name) & (keys_database['Klúč'] == key)]
+
+        if match.empty:
+            return jsonify({
+                "status": "error",
+                "message": f"Kľúč '{key}' nie je priradený zamestnancovi '{name}'."
+            }), 400
+
+        # Odstrániť záznam
+        keys_database = keys_database[~((keys_database['Meno'] == name) & (keys_database['Klúč'] == key))]
+
+        keys_database.to_csv(path_to_database_keys, mode='w', header=True, index=False)
+
+        return jsonify({"status": "success", "message": "Kľúč bol úspešne vrátený."}), 200
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
+
+@app.route('/load_keys_database', methods=['GET'])
+def load_keys_database():
+
+    key_database = join_database(path_to_database_keys)
+    html_table = key_database.to_html(escape=False, index=False, table_id="table_of_guests")
+
+    return html_table, 200  # vraciaš HTML tabuľku ako text
 
 if __name__ == "__main__":
     app.run(port=5000,debug=True)

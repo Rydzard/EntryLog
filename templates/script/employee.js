@@ -1,8 +1,7 @@
-function searchEmployee()
-{
+function searchEmployee() {
     var input_string = document.getElementById("name_id").value.trim()
 
-    if(!input_string){
+    if (!input_string) {
         input_string = prompt("Zadajte čip").trim();
         input_string = parseInt(input_string);
     }
@@ -14,26 +13,88 @@ function searchEmployee()
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ input_string })  // Kratšia verzia zápisu (ES6)
     })
-    .then(response => response.json())
-    .then(data => { 
-        var meno = data[0].name;
-        var čip = data[0].chip;
-        var pracovisko = data[0].department;
-        const myWindow = window.open("", "", "width=800,height=500");
+        .then(response => response.json())
+        .then(data => {
+            var meno = data[0].name;
+            var čip = data[0].chip;
+            var pracovisko = data[0].department;
+            const myWindow = window.open("", "", "width=800,height=500");
 
-        const cssURL = "styles/style.css"; // napr. "./moj-styl.css" ak je lokálne
+            const cssURL = "styles/style.css"; // napr. "./moj-styl.css" ak je lokálne
 
-        // Vytvoríme <link> pre CSS a pridáme ho do <head> nového okna
-        const link = myWindow.document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = cssURL;
-        myWindow.document.head.appendChild(link);
+            // Vytvoríme <link> pre CSS a pridáme ho do <head> nového okna
+            const link = myWindow.document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = cssURL;
+            myWindow.document.head.appendChild(link);
 
-        myWindow.document.body.innerHTML = "<h1>Info zamestnanca</h1> <br> <p> Meno:"+meno+"</p> <br> <p>Čip:"+ čip + 
-                                            "</p> <br> <p>Pracovisko:" + pracovisko + "</p> <br>" + data[0].keys_table;
-
-    })
-    .catch(console.error);  // Zobrazíme chybu, ak nejaká nastane
-
-
+            myWindow.document.body.innerHTML = "<h1>Info zamestnanca</h1> <br> <p> Meno:" + meno + "</p> <br> <p>Čip:" + čip +
+                "</p> <br> <p>Pracovisko:" + pracovisko + "</p> <br>" + '<div id="historyInfo" class="historyInfo">' + data[0].keys_table + '</div>';
+        })
+        .catch(console.error);  // Zobrazíme chybu, ak nejaká nastane
 }
+
+function toggleSpecialInputs() {
+    const isChecked = document.getElementById('special_checkbox').checked;
+    document.getElementById('date_id').disabled = !isChecked;
+    document.getElementById('why_id').disabled = !isChecked;
+}
+
+function add_key() {
+    var name = document.getElementById('name').value;
+    var key = document.getElementById('key').value;
+    var date = document.getElementById('date_id').value;
+    var why = document.getElementById('why_id').value;
+
+    if (!name || !key) {
+        alert("Treba vyplniť celý dotazník");
+        return;
+    }
+
+    fetch('http://localhost:5000/add_key', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, key, date_id: date, why_id: why })  // názvy musia sedieť s backendom
+    })
+    .then(response => response.json())  // ← opravene: voláme json ako funkciu
+    .then(data => {
+        if (data.status === "success") {
+            alert(data.message);
+        } else {
+            alert("Chyba: " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error("Chyba pri požiadavke:", error);
+        alert("Nastala chyba pri komunikácii so serverom.");
+    });
+}
+
+function return_key() {
+    var name = document.getElementById('name_return').value;
+    var key = document.getElementById('key_return').value;
+
+    if (!name || !key) {
+        alert("Treba vyplniť celý dotazník");
+        return;
+    }
+
+    fetch('http://localhost:5000/return_keys', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name_return: name, key_return: key })  // názvy musia sedieť s backendom
+    })
+    .then(response => response.json())  // <-- Tu bol problém: chýbali zátvorky
+    .then(data => {
+        if (data.status === "success") {
+            alert(data.message);
+        } else {
+            alert("Chyba: " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error("Chyba pri požiadavke:", error);
+        alert("Nastala chyba pri komunikácii so serverom.");
+    });
+}
+

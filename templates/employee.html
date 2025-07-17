@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="sk">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,10 +10,12 @@
 
 <body>
 
-        <header>
+    <header>
         <ul>
-           <li> <h1>IMET</h1> </li>
-          
+            <li>
+                <h1>IMET</h1>
+            </li>
+
             <li>
                 <a href="registration.html">Registrácia</a>
             </li>
@@ -24,7 +27,9 @@
             <li>
                 <a href="employee.html">Zamestnanci</a>
             </li>
-
+            <li>
+                <a href="keys.html">Vydané klúče</a>
+            </li>
             <li>
                 <a href="history.html">História vrátenia</a>
             </li>
@@ -33,14 +38,45 @@
     </header>
 
     <main>
+
         <div>
-            <p>Meno Zamestnanca</p>
-            <input id="name_id" type="text"> 
+            <p>
+                <label>
+                    <input type="checkbox" id="special_checkbox" onchange="toggleSpecialInputs()">
+                    Špeciálne vydanie
+                </label>
+            </p>
+
+            <p>Meno</p>
+            <input id="name" type="text">
+
+            <p>číslo klúču</p>
+            <input id="key" type="number">
+
+            <p>Do kedy</p>
+            <input type="date" id="date_id" disabled>
+
+            <p>Prečo</p>
+            <input type="text" id="why_id" disabled>
+
+            <button onclick="add_key()">Pridať kluč zamestnancovi</button>
+        </div>
+
+        <div>
+            <p>Meno zamestnanca (nepovinne)</p>
+            <input id="name_id" type="text">
             <button onclick="searchEmployee()">Hľadať zamestnanca</button>
         </div>
 
+        <div>
+            <p>Meno zamestnanca (nepovinne)</p>
+            <input type="text" id="name_return">
+            <p>číslo klúču</p>
+            <input type="number" id="key_return">
+            <br>
+            <button onclick="return_key()">Vrátiť klúče</button>
+        </div>
+
         <script src="script/employee.js"></script>
-    </main>  
+    </main>
 </body>
-
-

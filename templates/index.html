@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html lang="sk">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="styles/style.css">
-</head> 
+</head>
+
 <body>
     <header>
         <ul>
-           <li> <h1>IMET</h1> </li>
-          
+            <li>
+                <h1>IMET</h1>
+            </li>
+
             <li>
                 <a href="registration.html">Registrácia</a>
             </li>
@@ -22,7 +26,9 @@
             <li>
                 <a href="employee.html">Zamestnanci</a>
             </li>
-
+            <li>
+                <a href="keys.html">Vydané klúče</a>
+            </li>
             <li>
                 <a href="history.html">História vrátenia</a>
             </li>
@@ -30,19 +36,26 @@
 
     </header>
     <main>
-    <!-- Tlačidlo, ktoré otvorí modálne okno -->
-    <div id="personInfo" class="personInfo">
+        <!-- Tlačidlo, ktoré otvorí modálne okno -->
+        <div id="personInfo" class="personInfo">
 
-    </div>
-
-    <br><br><p>Vyhľadať návštevníka(Meno)</p><br>
-    <input id="search_input_guests"> <button onclick="search_guest_button()">Hľadať návštevníka</button>
-
-    <br><br><p>Vymazať návštevníka (Čip)</p><br>
-    <button onclick="delete_guest_button()">Vymazať návštevníka</button>
+        </div>
 
 
-    <script src="script/script.js"></script>
+        <div>
+            <br><br>
+            <p>Vyhľadať návštevníka(Meno)</p><br>
+            <input id="search_input_guests"> <button onclick="search_guest_button()">Hľadať návštevníka</button>
+
+            <br><br>
+            <p>Vymazať návštevníka (Čip)</p><br>
+            <button onclick="delete_guest_button()">Vymazať návštevníka</button>
+
+        </div>
+
+
+        <script src="script/script.js"></script>
     </main>
 </body>
+
 </html>
