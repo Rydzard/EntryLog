@@ -24,8 +24,13 @@ function add_guest()
 
     chip = prompt("Priložte kartu")
 
+    if(!chip || chip.length !== 10){
+        alert("Nesprávne zadali kartu")
+        return;
+    }
+
     // Poslanie dát na server pomocou fetch
-    fetch('http://localhost:5000/add_guest', {
+    fetch('http://localhost:5000/api/add_guest', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name , who, currentTime, formattedDate, why,chip })  // Kratšia verzia zápisu (ES6)

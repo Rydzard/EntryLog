@@ -1,37 +1,40 @@
 function searchEmployee() {
-    var input_string = document.getElementById("name_id").value.trim()
+    var input_string = document.getElementById("name_id").value;
 
     if (!input_string) {
         input_string = prompt("Zadajte čip").trim();
         input_string = parseInt(input_string);
     }
 
+    if(!input_string) {
+        alert("Ste nezadali žiaden vstup, je potrebné meno zamestnanca alebo číslo čipu")
+        return;
+    }
+
     console.log(input_string)
 
-    fetch('http://localhost:5000/render_employee', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ input_string })  // Kratšia verzia zápisu (ES6)
+    fetch(`http://localhost:5000/api/render_employee?search_input=${encodeURIComponent(input_string)}`, {
+        method: 'GET'
     })
-        .then(response => response.json())
-        .then(data => {
-            var meno = data[0].name;
-            var čip = data[0].chip;
-            var pracovisko = data[0].department;
-            const myWindow = window.open("", "", "width=800,height=500");
+    .then(response => response.json())
+    .then(data => {
+        var meno = data[0].name;
+        var čip = data[0].chip;
+        var pracovisko = data[0].department;
+        const myWindow = window.open("", "", "width=800,height=500");
 
-            const cssURL = "styles/style.css"; // napr. "./moj-styl.css" ak je lokálne
+        const cssURL = "styles/style.css"; // napr. "./moj-styl.css" ak je lokálne
 
-            // Vytvoríme <link> pre CSS a pridáme ho do <head> nového okna
-            const link = myWindow.document.createElement("link");
-            link.rel = "stylesheet";
-            link.href = cssURL;
-            myWindow.document.head.appendChild(link);
+        // Vytvoríme <link> pre CSS a pridáme ho do <head> nového okna
+        const link = myWindow.document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = cssURL;
+        myWindow.document.head.appendChild(link);
 
-            myWindow.document.body.innerHTML = "<h1>Info zamestnanca</h1> <br> <p> Meno:" + meno + "</p> <br> <p>Čip:" + čip +
-                "</p> <br> <p>Pracovisko:" + pracovisko + "</p> <br>" + '<div id="historyInfo" class="historyInfo">' + data[0].keys_table + '</div>';
-        })
-        .catch(console.error);  // Zobrazíme chybu, ak nejaká nastane
+        myWindow.document.body.innerHTML = "<h1>Info zamestnanca</h1> <br> <p> Meno:" + meno + "</p> <br> <p>Čip:" + čip +
+            "</p> <br> <p>Pracovisko:" + pracovisko + "</p> <br>" + '<div id="personInfo" class="personInfo">' + data[0].keys_table + '</div>';
+    })
+    .catch(console.error);  // Zobrazíme chybu, ak nejaká nastane
 }
 
 function toggleSpecialInputs() {
@@ -45,13 +48,20 @@ function add_key() {
     var key = document.getElementById('key').value;
     var date = document.getElementById('date_id').value;
     var why = document.getElementById('why_id').value;
+    const isChecked = document.getElementById('special_checkbox').checked;
 
     if (!name || !key) {
         alert("Treba vyplniť celý dotazník");
         return;
     }
 
-    fetch('http://localhost:5000/add_key', {
+    if(!isChecked){
+        console.log("special checkbox is checked")
+        why = "Nepriradené"
+        date = "Nepriradené"
+    }
+
+    fetch('http://localhost:5000/api/add_key', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, key, date_id: date, why_id: why })  // názvy musia sedieť s backendom
@@ -79,7 +89,7 @@ function return_key() {
         return;
     }
 
-    fetch('http://localhost:5000/return_keys', {
+    fetch('http://localhost:5000/api/return_keys', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name_return: name, key_return: key })  // názvy musia sedieť s backendom

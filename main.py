@@ -21,7 +21,7 @@ def connect_to_database(dbname, user, password, host='localhost', port='5432'):
     )
     return conn
 
-@app.route('/add_guest', methods=['POST'])
+@app.route('/api/add_guest', methods=['POST'])
 def add_guest():
     try:
         data = request.get_json(force=True)
@@ -35,7 +35,14 @@ def add_guest():
         
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
+
+        print(who)
         
+        cur.execute("SELECT 1 FROM Zamestnanci WHERE Meno = %s", (who,))
+        if not cur.fetchone():
+            return jsonify({"status": "error", "message": f"Meno '{who}' neexistuje v databáze zamestnancov."}), 400
+
+
         insert_query = sql.SQL('''
             INSERT INTO Hostia ("meno", "zamestnanec", "prichod", "odchod", "preco", "cip")
             VALUES (%s, %s, %s, %s, %s, %s)
@@ -52,11 +59,11 @@ def add_guest():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-@app.route('/load_guests', methods=['GET'])
+@app.route('/api/load_guests', methods=['GET'])
 def load_guests():
     conn = connect_to_database("mydatabase","myuser","mypassword")
     try:
-        df = pd.read_sql('SELECT * FROM hostia;', conn)
+        df = pd.read_sql('SELECT meno, zamestnanec, prichod, odchod, preco, cip FROM hostia;', conn)
         html_table = df.to_html(escape=False, index=False, table_id="table_of_guests")
         return html_table, 200
     except Exception as e:
@@ -64,7 +71,7 @@ def load_guests():
     finally:
         conn.close()
 
-@app.route('/load_history', methods=['GET'])
+@app.route('/api/load_history', methods=['GET'])
 def load_history():
     conn = None
     try:
@@ -110,17 +117,16 @@ def add_history(chip_number):
         if conn:
             conn.close()
 
-@app.route('/search_guests', methods=['POST'])
+@app.route('/api/search_guests', methods=['GET'])
 def search_guests():
     try:
-        data = request.get_json()
-        input_string = data.get('search_input')
+        input_string = request.args.get('search_input')
 
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
 
         cur.execute(
-            "SELECT * FROM Hostia WHERE Meno ILIKE %s",
+            "SELECT meno, zamestnanec, prichod, odchod, preco, cip FROM Hostia WHERE meno ILIKE %s",
             (input_string + '%',)
         )
         rows = cur.fetchall()
@@ -139,11 +145,14 @@ def search_guests():
 
 
 
-@app.route('/delete_guests', methods=['POST'])
+@app.route('/api/delete_guests', methods=['POST'])
 def delete_guests():
     try:
         data = request.get_json()
         chip_to_delete = data.get('delete_input')
+
+        if(not chip_to_delete.isnumeric()):
+            return
 
         chip_to_delete = int(chip_to_delete)
         
@@ -159,7 +168,7 @@ def delete_guests():
         conn.commit()
 
         # 3. Načítaj aktualizovaný zoznam hostí
-        cur.execute("SELECT * FROM Hostia")
+        cur.execute("SELECT meno, zamestnanec, prichod, odchod, preco, cip FROM Hostia")
         rows = cur.fetchall()
         columns = [desc[0] for desc in cur.description]
 
@@ -174,11 +183,10 @@ def delete_guests():
     except Exception as e:
         return str(e), 500
 
-@app.route('/render_employee', methods=['POST'])
+@app.route('/api/render_employee', methods=['GET'])
 def render_employee():
     try:
-        data = request.get_json()
-        input_value = data.get('input_string')
+        input_value = request.args.get('search_input')
 
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
@@ -220,7 +228,7 @@ def render_keys(meno):
         cur = conn.cursor()
 
         # Získaj kľúče priradené zamestnancovi podľa mena
-        cur.execute("SELECT * FROM kluce WHERE meno = %s", (meno,))
+        cur.execute("SELECT kluc, preco, cas FROM kluce WHERE meno = %s", (meno,))
         rows = cur.fetchall()
         colnames = [desc[0] for desc in cur.description]
 
@@ -242,7 +250,7 @@ def render_keys(meno):
         return f"<p>Chyba pri načítaní kľúčov: {str(e)}</p>"
 
 
-@app.route('/add_key', methods=['POST'])
+@app.route('/api/add_key', methods=['POST'])
 def add_key():
     try:
         data = request.get_json()
@@ -250,12 +258,6 @@ def add_key():
         key = data.get('key')
         date = data.get('date_id')
         why = data.get('why_id')
-
-        if not date:
-            date = "Nepriradené"
-        
-        if not why:
-            why = "Nepriradené"
 
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
@@ -285,7 +287,7 @@ def add_key():
         return jsonify({"status": "error", "message": str(e)}), 400
 
 
-@app.route('/return_keys', methods=['POST'])
+@app.route('/api/return_keys', methods=['POST'])
 def return_keys():
     try:
         data = request.get_json()
@@ -297,18 +299,13 @@ def return_keys():
         cur = conn.cursor()
 
         # Skontroluj, či záznam existuje
-        cur.execute("""
-            SELECT * FROM Kluce
-            WHERE Meno = %s AND Kluc = %s
-        """, (name, key))
+        cur.execute("""SELECT * FROM Kluce WHERE Meno = %s AND Kluc = %s""", (name, key))
         match = cur.fetchone()
 
         if not match:
             cur.close()
             conn.close()
-            return jsonify({
-                "status": "error",
-                "message": f"Kľúč '{key}' nie je priradený zamestnancovi '{name}'."
+            return jsonify({"status": "error","message": f"Kľúč '{key}' nie je priradený zamestnancovi '{name}'."
             }), 400
 
         # Odstrániť záznam
@@ -327,7 +324,7 @@ def return_keys():
         return jsonify({"status": "error", "message": str(e)}), 400
 
 
-@app.route('/load_keys_database', methods=['GET'])
+@app.route('/api/load_keys_database', methods=['GET'])
 def load_keys_database():
     try:
         conn = connect_to_database("mydatabase","myuser","mypassword")
@@ -349,11 +346,10 @@ def load_keys_database():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 400
 
-@app.route('/search_key', methods=['POST'])
+@app.route('/api/search_key', methods=['GET'])
 def search_key():
     try:
-        data = request.get_json()
-        key = data.get('key_number')
+        key = request.args.get('key_number')
 
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
@@ -375,64 +371,5 @@ def search_key():
         return jsonify({"status": "error", "message": str(e)}), 400
 
 
-
-def create_all_tables():
-    conn = None
-    try:
-        conn = connect_to_database("mydatabase","myuser","mypassword")
-        cur = conn.cursor()
-        
-        # Vytvorenie tabuľky guests
-        cur.execute('''
-        CREATE TABLE IF NOT EXISTS Hostia (
-            id SERIAL PRIMARY KEY,
-            Meno VARCHAR(50) NOT NULL,
-            Zamestnanec VARCHAR(50) NOT NULL,
-            Prichod VARCHAR(50) NOT NULL,
-            Odchod VARCHAR(50) NOT NULL,
-            Preco VARCHAR(50) NOT NULL,
-            Cip INTEGER NOT NULL
-        );
-        ''')
-
-        cur.execute('''
-        CREATE TABLE IF NOT EXISTS Zamestnanci (
-            id SERIAL PRIMARY KEY,
-            Meno VARCHAR(50) NOT NULL,
-            Cip INTEGER NOT NULL,
-            Pracovisko VARCHAR(50) NOT NULL
-        );
-        ''')
-
-        cur.execute('''
-        CREATE TABLE IF NOT EXISTS Historia (
-            id SERIAL PRIMARY KEY,
-            Meno VARCHAR(50) NOT NULL,
-            Cas VARCHAR(50) NOT NULL,
-            Cip INTEGER NOT NULL
-        );
-        ''')
-
-        cur.execute('''
-        CREATE TABLE IF NOT EXISTS Kluce (
-            id SERIAL PRIMARY KEY,
-            Kluc INTEGER NOT NULL,
-            Meno VARCHAR(50) NOT NULL,
-            Preco VARCHAR(50) NOT NULL,
-            Cas VARCHAR(50) NOT NULL
-        );
-        ''')
-
-        
-        conn.commit()
-        cur.close()
-        print("Všetky tabuľky boli úspešne vytvorené alebo už existujú.")
-    except Exception as e:
-        print(f"Chyba pri vytváraní tabuliek: {e}")
-    finally:
-        if conn:
-            conn.close()
-
 if __name__ == "__main__":
-    create_all_tables()
     app.run(port=5000,debug=True)
