@@ -31,7 +31,22 @@ Tento projekt je jednoduchá webová aplikácia postavená na [Flask](https://fl
 
 Uisti sa, že máš nainštalovaný Docker a potom v koreňovom adresári projektu spusť:
 
-
 ```bash
 docker compose up -d
+```
+
+### 2.Spusti Flask backend:
+Uisti sa, že máš nainštalované závislosti (pozri nižšie). Potom spusti aplikáciu:
+
+```bash
+python main.py
+```
+Týmto sa spustí backendové REST API, ktoré používa databázu PostgreSQL z Docker kontajnera.
+
+### 3. Otvor HTML stránku:
+
+Po spustení backendu môžeš v prehliadači otvoriť ľubovoľný HTML súbor, napríklad:
+
+```bash
+ templates\index.html
 ```
