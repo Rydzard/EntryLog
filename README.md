@@ -30,3 +30,8 @@ Tento projekt je jednoduchá webová aplikácia postavená na [Flask](https://fl
 ### 1. Spusti kontajnery s databázou:
 
 Uisti sa, že máš nainštalovaný Docker a potom v koreňovom adresári projektu spusť:
+
+
+```bash
+docker compose up -d
+```
