@@ -3,7 +3,6 @@ import psycopg2
 from psycopg2 import sql
 
 import pandas as pd
-from pandasql import sqldf
 from flask_cors import CORS
 from datetime import datetime
 
@@ -34,8 +33,6 @@ def add_guest():
         
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
-
-        print(who)
         
         cur.execute("SELECT 1 FROM Zamestnanci WHERE Meno = %s", (who,))
         if not cur.fetchone():
@@ -44,7 +41,6 @@ def add_guest():
         cur.execute("SELECT 1 FROM hostia WHERE cip = %s", (chip_number,))
         if cur.fetchone():
             return jsonify({"status": "error", "message": f"Čip '{chip_number}' už bol niekomu pridelený."}), 400
-
 
         insert_query = sql.SQL('''
             INSERT INTO Hostia ("meno", "zamestnanec", "prichod", "odchod", "preco", "cip")
@@ -190,15 +186,24 @@ def delete_guests():
 def render_employee():
     try:
         input_value = request.args.get('search_input')
+        if not input_value:
+            return jsonify({"status": "error", "message": "Chýbajúci vstup."}), 400
 
-        conn = connect_to_database("mydatabase","myuser","mypassword")
+        conn = connect_to_database("mydatabase", "myuser", "mypassword")
         cur = conn.cursor()
 
-        # Rozlíšime, či je vstup čip (číslo) alebo meno (text)
-        if isinstance(input_value, int) or (isinstance(input_value, str) and input_value.isdigit()):
-            cur.execute("SELECT meno, cip, pracovisko FROM zamestnanci WHERE cip = %s", (int(input_value),))
+        print(input_value)
+
+        if input_value.isdigit():
+            cur.execute(
+                "SELECT meno, cip, pracovisko FROM zamestnanci WHERE cip = %s",
+                (input_value,)
+            )
         else:
-            cur.execute("SELECT meno, cip, pracovisko FROM zamestnanci WHERE meno = %s", (input_value,))
+            cur.execute(
+                "SELECT meno, cip, pracovisko FROM zamestnanci WHERE meno LIKE %s",
+                (f"{input_value}",)
+            )
 
         result = cur.fetchone()
         cur.close()
@@ -209,15 +214,15 @@ def render_employee():
 
         meno, cip, pracovisko = result
 
-        # Zavoláme funkciu, ktorá vygeneruje HTML tabuľku kľúčov (napr. podľa mena)
+        # Volanie funkcie, ktorá vygeneruje tabuľku kľúčov pre daného zamestnanca
         html_table_keys = render_keys(meno)
 
-        employee_data = [{
+        employee_data = {
             "name": meno,
             "chip": int(cip),
             "department": pracovisko,
             "keys_table": html_table_keys
-        }]
+        }
 
         return jsonify(employee_data), 200
 
@@ -292,8 +297,6 @@ def add_key():
 
 
 def get_name_by_chip(chip):
-    print('start function')
-
     conn = connect_to_database("mydatabase", "myuser", "mypassword")
     cur = conn.cursor()
     

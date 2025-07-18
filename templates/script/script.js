@@ -17,8 +17,6 @@ function search_guest_button() {
         return
     }
 
-    console.log(search_input)
-
     fetch(`http://localhost:5000/api/search_guests?search_input=${encodeURIComponent(search_input)}`, {
         method: 'GET'
     })
@@ -27,15 +25,12 @@ function search_guest_button() {
             document.getElementById("personInfo").innerHTML = html;
         })
         .catch(console.error)
-
-    document.getElementById("search_input_guests").value = ""
 }
 
 function delete_guest_button() {
     delete_input = prompt("Priložte kartu")
 
-    if(!delete_input)
-    {
+    if(!delete_input){
         alert("Ste nezadali čip karty")
         return
     }

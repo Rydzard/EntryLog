@@ -1,5 +1,4 @@
-function load_history()
-{
+function load_history(){
     fetch('http://localhost:5000/api/load_history')
         .then(response => response.text())
         .then(html => {

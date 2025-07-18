@@ -12,14 +12,12 @@ function load_keys_database() {
 function search_key() {
      var key_number = document.getElementById("search_key_id").value;
 
-    if(!key_number)
-    {
+    if(!key_number){
         load_keys_database()
         return
     }
     
-    if(key_number <= 0)
-    {
+    if(key_number <= 0){
         alert("Zadejte číslo klíče")
         return
     }
@@ -32,8 +30,6 @@ function search_key() {
         document.getElementById("historyInfo").innerHTML = html;
     })
     .catch(console.error)
-
-    //document.getElementById("search_input_guests").value = ""
 }
 
 
