@@ -29,7 +29,7 @@ function searchEmployee() {
             var department_json = data.department;
 
             //otvorí nové okno s velkostou a nastaví subor css ktorý sa otovrí pre toto okno
-            const myWindow = window.open("", "", "width=800,height=500");
+            const myWindow = window.open("", "", "width=1000,height=500");
             const cssURL = "styles/style.css";
 
             //tu sa ešte všetko pridá css na začiatok html
@@ -91,32 +91,35 @@ function add_key() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, key, date_id: date, why_id: why })
     })
-    .then(response => response.json())  // ← opravene: voláme json ako funkciu
-    .then(data => {
-        if (data.status === "success") {
-            alert(data.message);
-        } else {
-            alert("Chyba: " + data.message);
-        }
-    })
-    .catch(error => {
-        console.error("Chyba pri požiadavke:", error);
-        alert("Nastala chyba pri komunikácii so serverom.");
-    });
+        .then(response => response.json())  // ← opravene: voláme json ako funkciu
+        .then(data => {
+            if (data.status === "success") {
+                alert(data.message);
+            } else {
+                alert("Chyba: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error("Chyba pri požiadavke:", error);
+            alert("Nastala chyba pri komunikácii so serverom.");
+        });
 }
 
 function return_key() {
     var name = document.getElementById('name_return').value;
     var key = document.getElementById('key_return').value;
+    var chip;
 
     if (!name) {
-        var chip = prompt("Zadajte čip zamestnanca ");
+        chip = prompt("Zadajte čip zamestnanca ");
+
+        // Skontroluj, či čip existuje a má presne 10 znakov
+        if (chip.length !== 10) {
+            alert("Nesprávny počet čísel");
+            return;
+        }
     }
 
-    if (chip.length !== 10) {
-        alert("Nesprávny počet čísel");
-        return;
-    }
 
     if (!key) {
         alert("Treba vyplniť celý dotazník");
@@ -133,17 +136,17 @@ function return_key() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name_return: name, key_return: key, chip_return: chip })  // názvy musia sedieť s backendom
     })
-    .then(response => response.json())  // <-- Tu bol problém: chýbali zátvorky
-    .then(data => {
-        if (data.status === "success") {
-            alert(data.message);
-        } else {
-            alert("Chyba: " + data.message);
-        }
-    })
-    .catch(error => {
-        console.error("Chyba pri požiadavke:", error);
-        alert("Nastala chyba pri komunikácii so serverom.");
-    });
+        .then(response => response.json())  // <-- Tu bol problém: chýbali zátvorky
+        .then(data => {
+            if (data.status === "success") {
+                alert(data.message);
+            } else {
+                alert("Chyba: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error("Chyba pri požiadavke:", error);
+            alert("Nastala chyba pri komunikácii so serverom.");
+        });
 }
 

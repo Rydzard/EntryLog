@@ -94,7 +94,7 @@ def add_history(chip_number):
         result = cur.fetchone()
 
         if result is None:
-            print("❌ Hosť s daným čipom nebol nájdený v databáze.")
+            print("Hosť s daným čipom nebol nájdený v databáze.")
             return
 
         meno_hosta = result[0]
@@ -105,7 +105,7 @@ def add_history(chip_number):
             (meno_hosta, cas_vratenia, chip_number)
         )
         conn.commit()
-        print("✅ Záznam o vrátení bol úspešne uložený do histórie.")
+        print("Záznam o vrátení bol úspešne uložený do histórie.")
 
     except Exception as e:
         print(f"Chyba pri ukladaní histórie: {e}")

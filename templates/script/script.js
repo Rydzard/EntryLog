@@ -35,6 +35,11 @@ function delete_guest_button() {
         return
     }
 
+    if(delete_input.length !== 10){
+        alert("Nesprávna dlžka čisla karty")
+        return
+    }
+
     fetch('http://localhost:5000/api/delete_guests', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
