@@ -1,6 +1,8 @@
 function searchEmployee() {
+    //načíta vstup
     var input_string = document.getElementById("name_id").value.trim();
 
+    //ak nezadal vstup,tak nech načita čip
     if (!input_string) {
         console.log("Voslo sem int");
         input_string = prompt("Zadajte čip").trim();
@@ -8,14 +10,13 @@ function searchEmployee() {
         console.log(input_string);
     }
 
+    //aj napriem tomu že nič nezdal tak vyhodi alert s chybou a da return
     if (!input_string) {
         alert("Ste nezadali žiaden vstup, je potrebné meno zamestnanca alebo číslo čipu");
         return;
     }
 
-    console.log(input_string);
-
-
+    //url kde sa bude posielat sprava na api
     const url = `http://localhost:5000/api/render_employee?search_input=${encodeURIComponent(input_string)}`;
 
     fetch(url, {
@@ -23,22 +24,23 @@ function searchEmployee() {
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
-            var meno = data.name;
-            console.log(meno)
-            var cip = data.chip;
-            var pracovisko = data.department;
+            var name_json = data.name;
+            var chip_json = data.chip;
+            var department_json = data.department;
 
+            //otvorí nové okno s velkostou a nastaví subor css ktorý sa otovrí pre toto okno
             const myWindow = window.open("", "", "width=800,height=500");
             const cssURL = "styles/style.css";
 
+            //tu sa ešte všetko pridá css na začiatok html
             const link = myWindow.document.createElement("link");
             link.rel = "stylesheet";
             link.href = cssURL;
             myWindow.document.head.appendChild(link);
 
-            myWindow.document.body.innerHTML = "<h1>Info zamestnanca</h1> <br> <p>Meno: " + meno + "</p> <br> <p>Čip: " + cip +
-                "</p> <br> <p>Pracovisko: " + pracovisko + "</p> <br>" +
+            //pridanie body elementov a informacii o zamestnancovi a klúčov
+            myWindow.document.body.innerHTML = "<h1>Info zamestnanca</h1> <br> <p>Meno: " + name_json + "</p> <br> <p>Čip: " + chip_json +
+                "</p> <br> <p>Pracovisko: " + department_json + "</p> <br>" +
                 '<div id="personInfo" class="personInfo">' + data.keys_table + '</div>';
         })
         .catch(error => {
@@ -47,51 +49,60 @@ function searchEmployee() {
 
 }
 
+//funckia ktora zabraví inputy pre ked je zaškrtnute special checkbox
 function toggleSpecialInputs() {
     const isChecked = document.getElementById('special_checkbox').checked;
     document.getElementById('date_id').disabled = !isChecked;
     document.getElementById('why_id').disabled = !isChecked;
 }
 
+
+//funkcia ktorá pridáva klúče zamestnancom
 function add_key() {
+
+    //vstupy
     var name = document.getElementById('name').value;
     var key = document.getElementById('key').value;
     var date = document.getElementById('date_id').value;
     var why = document.getElementById('why_id').value;
     const isChecked = document.getElementById('special_checkbox').checked;
 
+    //ak nezadal vstupy tak vyhodi alert a vráti return
     if (!name || !key) {
         alert("Treba vyplniť celý dotazník");
         return;
     }
 
+    //ak zadá ručne zaporné čislo do inputu tak vyhodi alert a vráti return
     if (key <= 0) {
         alert("Ste zadali záporné čislo klúča");
         return;
     }
 
+    //ak vátnik nič nezadal tak nastavi dátum a prečo ako nepriradené
     if (!isChecked) {
         why = "Nepriradené"
         date = "Nepriradené"
     }
 
+    //vytvoríme url kde sa bude posielat sprava na api metodou post
     fetch('http://localhost:5000/api/add_key', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, key, date_id: date, why_id: why })  // názvy musia sedieť s backendom
+        body: JSON.stringify({ name, key, date_id: date, why_id: why })
     })
-        .then(response => response.json())  // ← opravene: voláme json ako funkciu
-        .then(data => {
-            if (data.status === "success") {
-                alert(data.message);
-            } else {
-                alert("Chyba: " + data.message);
-            }
-        })
-        .catch(error => {
-            console.error("Chyba pri požiadavke:", error);
-            alert("Nastala chyba pri komunikácii so serverom.");
-        });
+    .then(response => response.json())  // ← opravene: voláme json ako funkciu
+    .then(data => {
+        if (data.status === "success") {
+            alert(data.message);
+        } else {
+            alert("Chyba: " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error("Chyba pri požiadavke:", error);
+        alert("Nastala chyba pri komunikácii so serverom.");
+    });
 }
 
 function return_key() {
@@ -122,17 +133,17 @@ function return_key() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name_return: name, key_return: key, chip_return: chip })  // názvy musia sedieť s backendom
     })
-        .then(response => response.json())  // <-- Tu bol problém: chýbali zátvorky
-        .then(data => {
-            if (data.status === "success") {
-                alert(data.message);
-            } else {
-                alert("Chyba: " + data.message);
-            }
-        })
-        .catch(error => {
-            console.error("Chyba pri požiadavke:", error);
-            alert("Nastala chyba pri komunikácii so serverom.");
-        });
+    .then(response => response.json())  // <-- Tu bol problém: chýbali zátvorky
+    .then(data => {
+        if (data.status === "success") {
+            alert(data.message);
+        } else {
+            alert("Chyba: " + data.message);
+        }
+    })
+    .catch(error => {
+        console.error("Chyba pri požiadavke:", error);
+        alert("Nastala chyba pri komunikácii so serverom.");
+    });
 }
 
