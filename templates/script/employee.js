@@ -55,6 +55,12 @@ function add_key() {
         return;
     }
 
+    if(key <= 0)
+    {
+        alert("Ste zadali záporné čislo klúča");
+        return;
+    }
+
     if(!isChecked){
         console.log("special checkbox is checked")
         why = "Nepriradené"
@@ -84,15 +90,32 @@ function return_key() {
     var name = document.getElementById('name_return').value;
     var key = document.getElementById('key_return').value;
 
-    if (!name || !key) {
+    if(!name)
+    {
+        var chip = prompt("Zadajte čip zamestnanca ");
+    }
+
+    if(chip.length !== 10)
+    {
+        alert("Nesprávny počet čísel");
+        return;
+    }
+
+    if (!key) {
         alert("Treba vyplniť celý dotazník");
         return;
     }
 
+    if(key <= 0)
+    {
+        alert("Ste zadali záporné čislo klúča");
+        return;
+    }
+    
     fetch('http://localhost:5000/api/return_keys', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name_return: name, key_return: key })  // názvy musia sedieť s backendom
+        body: JSON.stringify({ name_return: name, key_return: key, chip_return: chip })  // názvy musia sedieť s backendom
     })
     .then(response => response.json())  // <-- Tu bol problém: chýbali zátvorky
     .then(data => {

@@ -10,7 +10,6 @@ from datetime import datetime
 app = Flask(__name__)
 CORS(app)
 
-
 def connect_to_database(dbname, user, password, host='localhost', port='5432'):
     conn = psycopg2.connect(
         dbname=dbname,
@@ -41,6 +40,10 @@ def add_guest():
         cur.execute("SELECT 1 FROM Zamestnanci WHERE Meno = %s", (who,))
         if not cur.fetchone():
             return jsonify({"status": "error", "message": f"Meno '{who}' neexistuje v databáze zamestnancov."}), 400
+        
+        cur.execute("SELECT 1 FROM hostia WHERE cip = %s", (chip_number,))
+        if cur.fetchone():
+            return jsonify({"status": "error", "message": f"Čip '{chip_number}' už bol niekomu pridelený."}), 400
 
 
         insert_query = sql.SQL('''
@@ -77,7 +80,7 @@ def load_history():
     try:
         conn = connect_to_database("mydatabase","myuser","mypassword")
         # predpokladám, že tabulka História sa volá "historia" (malé písmená, podľa bežnej praxe)
-        df = pd.read_sql('SELECT * FROM historia;', conn)
+        df = pd.read_sql('SELECT meno, cas, cip FROM historia;', conn)
         html_table = df.to_html(escape=False, index=False, table_id="table_of_history")
         return html_table, 200
     except Exception as e:
@@ -287,13 +290,37 @@ def add_key():
         return jsonify({"status": "error", "message": str(e)}), 400
 
 
+
+def get_name_by_chip(chip):
+    print('start function')
+
+    conn = connect_to_database("mydatabase", "myuser", "mypassword")
+    cur = conn.cursor()
+    
+    cur.execute("SELECT meno FROM Zamestnanci WHERE cip = %s", (chip,))
+    result = cur.fetchone()  # Získa prvý riadok výsledku
+
+    cur.close()
+    conn.close()
+
+    if result:
+        return result[0]
+    else:
+        return None
+
+
 @app.route('/api/return_keys', methods=['POST'])
 def return_keys():
     try:
         data = request.get_json()
 
-        name = str(data.get('name_return')).strip()
+        name = data.get('name_return')
         key = str(data.get('key_return')).strip()
+
+        chip = str(data.get('chip_return')).strip()
+
+        if not name or name.strip() == "":
+            name = get_name_by_chip(chip)
 
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
@@ -305,14 +332,10 @@ def return_keys():
         if not match:
             cur.close()
             conn.close()
-            return jsonify({"status": "error","message": f"Kľúč '{key}' nie je priradený zamestnancovi '{name}'."
-            }), 400
+            return jsonify({"status": "error","message": f"Kľúč '{key}' nie je priradený zamestnancovi '{name}'."}), 400
 
         # Odstrániť záznam
-        cur.execute("""
-            DELETE FROM Kluce
-            WHERE Meno = %s AND Kluc = %s
-        """, (name, key))
+        cur.execute("""DELETE FROM Kluce WHERE Meno = %s AND Kluc = %s""", (name, key))
 
         conn.commit()
         cur.close()
@@ -322,6 +345,7 @@ def return_keys():
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 400
+
 
 
 @app.route('/api/load_keys_database', methods=['GET'])
