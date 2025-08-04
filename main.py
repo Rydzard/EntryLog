@@ -26,9 +26,9 @@ def add_guest():
         
         name = data['name']
         who = data['who']
-        date = data['formattedDate']   # očakávam formát 'YYYY-MM-DD'
+        date = data['formattedDate']
         why = data['why']
-        currentTime = data['currentTime']  # tiež 'YYYY-MM-DD' alebo datetime string podľa DB
+        currentTime = data['currentTime'] 
         chip_number = data['chip']
         
         conn = connect_to_database("mydatabase","myuser","mypassword")
@@ -97,12 +97,13 @@ def add_history(chip_number):
             print("Hosť s daným čipom nebol nájdený v databáze.")
             return
 
-        meno_hosta = result[0]
-        cas_vratenia = datetime.now()
+        guest_name = result[0]
+        time_for_return = datetime.now()
+        formatted_time = time_for_return.strftime("%d.%m.%Y %H:%M:%S")
 
         cur.execute(
             "INSERT INTO historia (meno, cas, cip) VALUES (%s, %s, %s)",
-            (meno_hosta, cas_vratenia, chip_number)
+            (guest_name, formatted_time, chip_number)
         )
         conn.commit()
         print("Záznam o vrátení bol úspešne uložený do histórie.")
@@ -192,8 +193,6 @@ def render_employee():
         conn = connect_to_database("mydatabase", "myuser", "mypassword")
         cur = conn.cursor()
 
-        print(input_value)
-
         if input_value.isdigit():
             cur.execute(
                 "SELECT meno, cip, pracovisko FROM zamestnanci WHERE cip = %s",
@@ -266,6 +265,8 @@ def add_key():
         key = data.get('key')
         date = data.get('date_id')
         why = data.get('why_id')
+
+        print(data)
 
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()

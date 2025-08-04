@@ -67,6 +67,10 @@ function add_key() {
     var why = document.getElementById('why_id').value;
     const isChecked = document.getElementById('special_checkbox').checked;
 
+
+    var parts = date.split('-'); // ["2025", "08", "04"]
+    var formattedDate = parts[2] + '.' + parts[1] + '.' + parts[0]; // "04.08.2025"
+
     //ak nezadal vstupy tak vyhodi alert a vráti return
     if (!name || !key) {
         alert("Treba vyplniť celý dotazník");
@@ -82,14 +86,14 @@ function add_key() {
     //ak vátnik nič nezadal tak nastavi dátum a prečo ako nepriradené
     if (!isChecked) {
         why = "Nepriradené"
-        date = "Nepriradené"
+        formattedDate = "Nepriradené"
     }
 
     //vytvoríme url kde sa bude posielat sprava na api metodou post
     fetch('http://localhost:5000/api/add_key', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, key, date_id: date, why_id: why })
+        body: JSON.stringify({ name, key, date_id: formattedDate, why_id: why })
     })
         .then(response => response.json())  // ← opravene: voláme json ako funkciu
         .then(data => {

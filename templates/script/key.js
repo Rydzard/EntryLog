@@ -1,5 +1,5 @@
 function load_keys_database() {
-     fetch('http://localhost:5000/api/load_keys_database')
+    fetch('http://localhost:5000/api/load_keys_database')
     .then(response => response.text())
     .then(html => {
         document.getElementById("historyInfo").innerHTML = html;
