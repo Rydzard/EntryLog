@@ -8,5 +8,3 @@ function load_history(){
         console.error("Chyba pri načítaní hostí:", error);
     });
 }
-
-load_history();

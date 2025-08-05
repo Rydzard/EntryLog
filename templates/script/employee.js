@@ -30,7 +30,7 @@ function searchEmployee() {
 
             //otvorí nové okno s velkostou a nastaví subor css ktorý sa otovrí pre toto okno
             const myWindow = window.open("", "", "width=1000,height=500");
-            const cssURL = "styles/style.css";
+            const cssURL = "templates/styles/style.css";
 
             //tu sa ešte všetko pridá css na začiatok html
             const link = myWindow.document.createElement("link");

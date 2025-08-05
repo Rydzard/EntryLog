@@ -31,6 +31,3 @@ function search_key() {
     })
     .catch(console.error)
 }
-
-
-load_keys_database();

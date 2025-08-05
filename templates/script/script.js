@@ -53,5 +53,3 @@ function delete_guest_button() {
 
     load_guests_table();
 }
-
-load_guests_table();
