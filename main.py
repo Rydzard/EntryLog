@@ -1,15 +1,18 @@
-from flask import Flask, request ,jsonify, make_response
+from flask import Flask, request ,jsonify, make_response, render_template, session
 import psycopg2
 from psycopg2 import sql
 
 import pandas as pd
 from flask_cors import CORS
-from datetime import datetime
+from datetime import datetime,timedelta
 
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash
 
 
 app = Flask(__name__)
+app.secret_key = 'tvoj_secret_key'  # musí byť nastavený, inak session nebude fungovať
+app.permanent_session_lifetime = timedelta(days=1)
+
 CORS(app)
 
 def connect_to_database(dbname, user, password, host='localhost', port='5432'):
@@ -429,8 +432,10 @@ def login():
 
         # Overíme zadaný čip proti hashu v databáze
         if check_password_hash(stored_hash, chip):
+            session.permanent = True
+            session['vratnik'] = name
+
             resp = make_response(jsonify({"message": "Prešlo", "status": "success"}))
-            resp.set_cookie('vratnik', name, max_age=24*60*60)  # cookie platná 1 deň
             return resp
         else:
             return jsonify({"message": "Neplatné meno alebo heslo"}), 401
@@ -440,10 +445,15 @@ def login():
 
 @app.route('/api/logout')
 def logout():
+    session.clear()  # vymaže všetky session dáta, teda aj 'user'
     response = make_response(jsonify({"message": "Odhlásený"}), 200)
-    response.set_cookie("is_logged_in", "", max_age=0, path='/')
+    response.set_cookie("session", "", max_age=0, path='/')  # zruší Flask session cookie
     return response
 
+
+@app.route('/')
+def home():
+    return render_template('app.html')
 
 if __name__ == "__main__":
     app.run(port=5000,debug=True)
