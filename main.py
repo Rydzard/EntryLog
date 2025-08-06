@@ -1,10 +1,13 @@
-from flask import Flask, request ,jsonify
+from flask import Flask, request ,jsonify, make_response
 import psycopg2
 from psycopg2 import sql
 
 import pandas as pd
 from flask_cors import CORS
 from datetime import datetime
+
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 app = Flask(__name__)
 CORS(app)
@@ -397,6 +400,49 @@ def search_key():
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 400
+
+
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    try:
+        print("Login start")
+
+        data = request.get_json()
+        name = data.get("name_guard")
+        chip = data.get("chip")
+
+        if not name or not chip:
+            return jsonify({"message": "Zadaj meno aj čip"}), 400
+
+        conn = connect_to_database("mydatabase", "myuser", "mypassword")
+        cur = conn.cursor()
+
+        # Hľadáme hash čipu pre dané meno
+        cur.execute("SELECT chip FROM vratnici WHERE name_surname = %s", (name,))
+        result = cur.fetchone()
+
+        if result is None:
+            return jsonify({"message": "Neplatné meno alebo heslo"}), 401
+        
+        stored_hash = result[0]
+
+        # Overíme zadaný čip proti hashu v databáze
+        if check_password_hash(stored_hash, chip):
+            resp = make_response(jsonify({"message": "Prešlo", "status": "success"}))
+            resp.set_cookie('vratnik', name, max_age=24*60*60)  # cookie platná 1 deň
+            return resp
+        else:
+            return jsonify({"message": "Neplatné meno alebo heslo"}), 401
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
+
+@app.route('/api/logout')
+def logout():
+    response = make_response(jsonify({"message": "Odhlásený"}), 200)
+    response.set_cookie("is_logged_in", "", max_age=0, path='/')
+    return response
 
 
 if __name__ == "__main__":

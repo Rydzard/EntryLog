@@ -4,10 +4,8 @@ function searchEmployee() {
 
     //ak nezadal vstup,tak nech načita čip
     if (!input_string) {
-        console.log("Voslo sem int");
         input_string = prompt("Zadajte čip").trim();
         input_string = parseInt(input_string);
-        console.log(input_string);
     }
 
     //aj napriem tomu že nič nezdal tak vyhodi alert s chybou a da return
@@ -68,8 +66,8 @@ function add_key() {
     const isChecked = document.getElementById('special_checkbox').checked;
 
 
-    var parts = date.split('-'); // ["2025", "08", "04"]
-    var formattedDate = parts[2] + '.' + parts[1] + '.' + parts[0]; // "04.08.2025"
+    var parts = date.split('-');
+    var formattedDate = parts[2] + '.' + parts[1] + '.' + parts[0];
 
     //ak nezadal vstupy tak vyhodi alert a vráti return
     if (!name || !key) {

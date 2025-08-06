@@ -145,3 +145,53 @@ ul li a:hover {
 ul li:hover ul.dropdown {
     display: block;
 }
+
+.delete-guest-box {
+    background-color: #f0f0f0;
+    padding: 25px 30px;
+    border-radius: 12px;
+    max-width: 420px;
+    margin: 30px auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    text-align: center;
+}
+
+.delete-guest-box p {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.styled-input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 70%;
+    max-width: 250px;
+    margin-bottom: 10px;
+    transition: border-color 0.3s ease;
+}
+
+.styled-input:focus {
+    border-color: #004466;
+    outline: none;
+}
+
+.delete-guest-box button {
+    background-color: #004466;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.delete-guest-box button:hover {
+    background-color: #00334d;
+}
