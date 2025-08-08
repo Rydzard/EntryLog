@@ -7,10 +7,11 @@ from flask_cors import CORS
 from datetime import datetime,timedelta
 
 from werkzeug.security import check_password_hash
+import secrets
 
 
 app = Flask(__name__)
-app.secret_key = 'tvoj_secret_key'  # musí byť nastavený, inak session nebude fungovať
+app.secret_key = secrets.token_hex(32)  # musí byť nastavený, inak session nebude fungovať
 app.permanent_session_lifetime = timedelta(days=1)
 
 CORS(app)
@@ -37,6 +38,9 @@ def add_guest():
         currentTime = data['currentTime'] 
         chip_number = data['chip']
         
+        if 'vratnik' not in session:
+            return jsonify({"error": "Unauthorized"}), 401
+
         vratnik = session['vratnik']
 
         conn = connect_to_database("mydatabase","myuser","mypassword")
@@ -95,6 +99,9 @@ def load_history():
 
 def add_history(chip_number):
     try:
+
+        if 'vratnik' not in session:
+            return jsonify({"error": "Unauthorized"}), 401
 
         vratnik = session['vratnik']
 
@@ -276,6 +283,10 @@ def add_key():
         key = data.get('key')
         date = data.get('date_id')
         why = data.get('why_id')
+
+        if 'vratnik' not in session:
+            return jsonify({"error": "Unauthorized"}), 401
+        
         vratnik = session['vratnik']
 
         print(data)
@@ -415,7 +426,6 @@ def search_key():
 @app.route('/api/login', methods=['POST'])
 def login():
     try:
-        print("Login start")
 
         data = request.get_json()
         name = data.get("name_guard")
@@ -463,4 +473,4 @@ def home():
     return render_template('app.html')
 
 if __name__ == "__main__":
-    app.run(port=5000,debug=True)
+    app.run(port=5000, debug=True)

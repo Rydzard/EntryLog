@@ -21,7 +21,9 @@ Tento projekt je jednoduchá webová aplikácia postavená na [Flask](https://fl
 - Flask
 - PostgreSQL
 - Docker & Docker Compose
-- HTML (ľubovoľné HTML súbory ako frontend)
+- HTML
+- CSS 
+- JS
 
 ---
 

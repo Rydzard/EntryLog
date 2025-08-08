@@ -35,7 +35,13 @@ function add_guest()
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name , who, currentTime, formattedDate, why,chip })  // Kratšia verzia zápisu (ES6)
     })
-    .then(response => response.json())
+    .then(response =>{ 
+            if (response.status === 401) {
+                console.warn("Cookie chýba alebo je neplatná");
+                window.location.href = "/";
+                return;
+            }
+            response.json()}) 
     .then(data => alert(data.message))  // Zobrazíme správu zo servera
     .catch(console.error);  // Zobrazíme chybu, ak nejaká nastane
 }

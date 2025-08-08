@@ -154,31 +154,31 @@ const registrationContent = `
         </div>`;
 
 
-function login_fun(){
-    console.log('login');
+function login_fun() {
+  console.log('login');
 
 
-    name_guard = document.getElementById('input_login_1').value;
-    chip = document.getElementById('input_login_2').value;
-    console.log(name_guard);
-    console.log(chip);
-    if(!name_guard && !chip){
-      alert('Nezadali ste všetky údaje')
-      return;
-    }
+  name_guard = document.getElementById('input_login_1').value;
+  chip = document.getElementById('input_login_2').value;
+  console.log(name_guard);
+  console.log(chip);
+  if (!name_guard && !chip) {
+    alert('Nezadali ste všetky údaje')
+    return;
+  }
 
-    fetch('http://localhost:5000/api/login', {
+  fetch('http://localhost:5000/api/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name_guard , chip})  // Kratšia verzia zápisu (ES6)
-    })
+    body: JSON.stringify({ name_guard, chip })  // Kratšia verzia zápisu (ES6)
+  })
     .then(response => response.json())
     .then(data => {
       if (data.status === "success") {
-          window.location.href = "#keys";
-          isLoggedIn = true;
+        window.location.href = "#keys";
+        isLoggedIn = true;
       }
-      else{
+      else {
         alert(data.message)
       }
     }) // Zobrazíme správu zo servera
@@ -187,12 +187,12 @@ function login_fun(){
 };
 
 document.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', function (e) {
-        if (!isLoggedIn) {
-            e.preventDefault();
-            alert("Najprv sa musíš prihlásiť.");
-        }
-    });
+  link.addEventListener('click', function (e) {
+    if (!isLoggedIn) {
+      e.preventDefault();
+      alert("Najprv sa musíš prihlásiť.");
+    }
+  });
 });
 
 function logout(event) {

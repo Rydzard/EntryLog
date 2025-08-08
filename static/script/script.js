@@ -1,12 +1,12 @@
 function load_guests_table() {
     fetch('http://localhost:5000/api/load_guests')
-    .then(response => response.text())
-    .then(html => {
-        document.getElementById("personInfo").innerHTML = html;
-    })
-    .catch(error => {
-        console.error("Chyba pri načítaní hostí:", error);
-    });
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById("personInfo").innerHTML = html;
+        })
+        .catch(error => {
+            console.error("Chyba pri načítaní hostí:", error);
+        });
 }
 
 function search_guest_button() {
@@ -20,22 +20,22 @@ function search_guest_button() {
     fetch(`http://localhost:5000/api/search_guests?search_input=${encodeURIComponent(search_input)}`, {
         method: 'GET'
     })
-    .then(response => response.text())
-    .then(html => {
-        document.getElementById("personInfo").innerHTML = html;
-    })
-    .catch(console.error)
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById("personInfo").innerHTML = html;
+        })
+        .catch(console.error)
 }
 
 function delete_guest_button() {
     delete_input = prompt("Priložte kartu")
 
-    if(!delete_input){
+    if (!delete_input) {
         alert("Ste nezadali čip karty")
         return
     }
 
-    if(delete_input.length !== 10){
+    if (delete_input.length !== 10) {
         alert("Nesprávna dlžka čisla karty")
         return
     }
@@ -45,7 +45,14 @@ function delete_guest_button() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ delete_input })  // Kratšia verzia zápisu (ES6)
     })
-    .then(response => response.text())
+    .then(response =>{ 
+        if (response.status === 401) {
+            console.warn("Cookie chýba alebo je neplatná");
+            window.location.href = "/";
+            return;
+        }
+        response.json()
+    })
     .then(html => {
         document.getElementById("personInfo").innerHTML = html;
     })

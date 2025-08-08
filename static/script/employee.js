@@ -93,7 +93,13 @@ function add_key() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, key, date_id: formattedDate, why_id: why })
     })
-        .then(response => response.json())  // ← opravene: voláme json ako funkciu
+        .then(response =>{ 
+            if (response.status === 401) {
+                console.warn("Cookie chýba alebo je neplatná");
+                window.location.href = "/";
+                return;
+            }
+            response.json()})  // ← opravene: voláme json ako funkciu
         .then(data => {
             if (data.status === "success") {
                 alert(data.message);
