@@ -52,7 +52,7 @@ const login = `
                <input class="styled-input" id="input_login_1" type="text" placeholder="Meno a priezvisko">
 
                <label for="input_login_2">Čip vrátnika</label>
-               <input class="styled-input" id="input_login_2" type="text" placeholder="Čip v tvare '000123567'">
+               <input class="styled-input" id="input_login_2" type="password" placeholder="Čip v tvare '000123567'">
 
                <button id="search_button_id" onclick="login_fun()">Prihlásiť sa</button>
           </div>`;
@@ -195,16 +195,19 @@ document.querySelectorAll('a').forEach(link => {
     });
 });
 
-function logout(){
-    fetch('/api/logout')
-      .then(response => {
-        if (!response.ok) throw new Error("Network response was not ok");
-        return response.json();
-      })
-      .then(data => {
-        alert(data.message);
-      })
-      .catch(error => {
-        console.error('Logout error:', error);
-      });
+function logout(event) {
+  event.preventDefault(); // Zastaví reload stránky
+
+  fetch('/api/logout')
+    .then(response => {
+      if (!response.ok) throw new Error("Network response was not ok");
+      return response.json();
+    })
+    .then(data => {
+      alert(data.message);
+      window.location.href = "/"; // presmeruj na login stránku
+    })
+    .catch(error => {
+      console.error('Logout error:', error);
+    });
 }

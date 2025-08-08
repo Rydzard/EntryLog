@@ -37,6 +37,8 @@ def add_guest():
         currentTime = data['currentTime'] 
         chip_number = data['chip']
         
+        vratnik = session['vratnik']
+
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
         
@@ -49,11 +51,11 @@ def add_guest():
             return jsonify({"status": "error", "message": f"Čip '{chip_number}' už bol niekomu pridelený."}), 400
 
         insert_query = sql.SQL('''
-            INSERT INTO Hostia ("meno", "zamestnanec", "prichod", "odchod", "preco", "cip")
-            VALUES (%s, %s, %s, %s, %s, %s)
+            INSERT INTO Hostia ("meno", "zamestnanec", "prichod", "odchod", "preco", "cip", "vydal")
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
         ''')
         
-        cur.execute(insert_query, (name, who, currentTime, date, why, chip_number))
+        cur.execute(insert_query, (name, who, currentTime, date, why, chip_number,vratnik))
         conn.commit()
         
         cur.close()
@@ -68,7 +70,7 @@ def add_guest():
 def load_guests():
     conn = connect_to_database("mydatabase","myuser","mypassword")
     try:
-        df = pd.read_sql('SELECT meno, zamestnanec, prichod, odchod, preco, cip FROM hostia;', conn)
+        df = pd.read_sql('SELECT meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM hostia;', conn)
         html_table = df.to_html(escape=False, index=False, table_id="table_of_guests")
         return html_table, 200
     except Exception as e:
@@ -82,7 +84,7 @@ def load_history():
     try:
         conn = connect_to_database("mydatabase","myuser","mypassword")
         # predpokladám, že tabulka História sa volá "historia" (malé písmená, podľa bežnej praxe)
-        df = pd.read_sql('SELECT meno, cas, cip FROM historia;', conn)
+        df = pd.read_sql('SELECT meno, cas, cip, vydal FROM historia;', conn)
         html_table = df.to_html(escape=False, index=False, table_id="table_of_history")
         return html_table, 200
     except Exception as e:
@@ -93,6 +95,9 @@ def load_history():
 
 def add_history(chip_number):
     try:
+
+        vratnik = session['vratnik']
+
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
 
@@ -108,8 +113,8 @@ def add_history(chip_number):
         formatted_time = time_for_return.strftime("%d.%m.%Y %H:%M:%S")
 
         cur.execute(
-            "INSERT INTO historia (meno, cas, cip) VALUES (%s, %s, %s)",
-            (guest_name, formatted_time, chip_number)
+            "INSERT INTO historia (meno, cas, cip, vydal) VALUES (%s, %s, %s, %s)",
+            (guest_name, formatted_time, chip_number,vratnik)
         )
         conn.commit()
         print("Záznam o vrátení bol úspešne uložený do histórie.")
@@ -132,7 +137,7 @@ def search_guests():
         cur = conn.cursor()
 
         cur.execute(
-            "SELECT meno, zamestnanec, prichod, odchod, preco, cip FROM Hostia WHERE meno ILIKE %s",
+            "SELECT meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM Hostia WHERE meno ILIKE %s",
             (input_string + '%',)
         )
         rows = cur.fetchall()
@@ -174,7 +179,7 @@ def delete_guests():
         conn.commit()
 
         # 3. Načítaj aktualizovaný zoznam hostí
-        cur.execute("SELECT meno, zamestnanec, prichod, odchod, preco, cip FROM Hostia")
+        cur.execute("SELECT meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM Hostia")
         rows = cur.fetchall()
         columns = [desc[0] for desc in cur.description]
 
@@ -234,14 +239,14 @@ def render_employee():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 400
 
-    
+
 def render_keys(meno):
     try:
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
 
         # Získaj kľúče priradené zamestnancovi podľa mena
-        cur.execute("SELECT kluc, preco, cas FROM kluce WHERE meno = %s", (meno,))
+        cur.execute("SELECT kluc, preco, cas, vydal FROM kluce WHERE meno = %s", (meno,))
         rows = cur.fetchall()
         colnames = [desc[0] for desc in cur.description]
 
@@ -271,6 +276,7 @@ def add_key():
         key = data.get('key')
         date = data.get('date_id')
         why = data.get('why_id')
+        vratnik = session['vratnik']
 
         print(data)
 
@@ -289,8 +295,8 @@ def add_key():
 
         # Vlož nový záznam
         cur.execute(
-            "INSERT INTO Kluce (Kluc, Meno, Preco, Cas) VALUES (%s, %s, %s, %s)",
-            (key, name, why, date)
+            "INSERT INTO Kluce (Kluc, Meno, Preco, Cas, vydal) VALUES (%s, %s, %s, %s, %s)",
+            (key, name, why, date,vratnik)
         )
         conn.commit()
         cur.close()
@@ -365,11 +371,11 @@ def load_keys_database():
         cur = conn.cursor()
 
         # Načítaj všetky údaje z tabuľky Kluce
-        cur.execute("SELECT Kluc, Meno, Preco, Cas FROM Kluce")
+        cur.execute("SELECT Kluc, Meno, Preco, Cas, vydal FROM Kluce")
         rows = cur.fetchall()
 
         # Konverzia na DataFrame pre HTML tabuľku
-        df = pd.DataFrame(rows, columns=["Klúč", "Meno", "Prečo", "Kedy"])
+        df = pd.DataFrame(rows, columns=["Klúč", "Meno", "Prečo", "Kedy", "Vydal"])
         html_table = df.to_html(escape=False, index=False, table_id="table_of_guests")
 
         cur.close()
@@ -445,9 +451,10 @@ def login():
 
 @app.route('/api/logout')
 def logout():
+    print("vOSLO")
     session.clear()  # vymaže všetky session dáta, teda aj 'user'
     response = make_response(jsonify({"message": "Odhlásený"}), 200)
-    response.set_cookie("session", "", max_age=0, path='/')  # zruší Flask session cookie
+    response.set_cookie('session', '', expires=0, path='/')
     return response
 
 
