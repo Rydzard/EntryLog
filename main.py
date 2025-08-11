@@ -1,6 +1,9 @@
 from flask import Flask, request ,jsonify, make_response, render_template, session
-import psycopg2
+
+from blueprints.db import connect_to_database
 from psycopg2 import sql
+
+
 
 import pandas as pd
 from flask_cors import CORS
@@ -9,27 +12,11 @@ from datetime import datetime,timedelta
 from werkzeug.security import check_password_hash
 import secrets
 
-from sqlalchemy import create_engine
-
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)  # musí byť nastavený, inak session nebude fungovať
 app.permanent_session_lifetime = timedelta(days=1)
 
 CORS(app)
-
-def get_engine():
-    engine = create_engine('postgresql+psycopg2://myuser:mypassword@localhost:5432/mydatabase')
-    return engine
-
-def connect_to_database(dbname, user, password, host='localhost', port='5432'):
-    conn = psycopg2.connect(
-        dbname=dbname,
-        user=user,
-        password=password,
-        host=host,
-        port=port
-    )
-    return conn
 
 @app.route('/api/add_guest', methods=['POST'])
 def add_guest():
@@ -129,7 +116,6 @@ def add_history(chip_number, conn):
             (guest_name, formatted_time, chip_number, vratnik)
         )
         conn.commit()
-        print("Záznam o vrátení bol úspešne uložený do histórie.")
 
     except Exception as e:
         print(f"Chyba pri ukladaní histórie: {e}")
@@ -177,7 +163,6 @@ def delete_guests():
         if 'vratnik' not in session:
                 return jsonify({"status": "error", "message": "Nie si prihlásený alebo session vypršala"}), 401
 
-        print("voslo do funkcie")
         data = request.get_json()
         chip_to_delete = data.get('delete_input')
 
@@ -186,25 +171,17 @@ def delete_guests():
 
         chip_to_delete = int(chip_to_delete)
 
-        print("pripojenie na databázu")
-
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
 
         # 1. Zmaž hosťa podľa čipu
         cur.execute("DELETE FROM Hostia WHERE Cip = %s", (chip_to_delete,))
 
-
-        print("Pridanie add_history pred")
-
         add_history(chip_to_delete , conn)
-
-        print("Pridanie add_history po")
 
         # 2. Ulož zmenu
         conn.commit()
 
-        print("Nacitavanie hostia")
         # 3. Načítaj aktualizovaný zoznam hostí
         cur.execute("SELECT meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM Hostia")
         rows = cur.fetchall()
@@ -212,8 +189,6 @@ def delete_guests():
 
         cur.close()
         conn.close()
-
-        print("Generovanie html")
 
         df = pd.DataFrame(rows, columns=columns)
         html_table = df.to_html(escape=False, index=False, table_id="table_of_guests")
@@ -347,7 +322,6 @@ def add_key():
         return jsonify({"status": "success", "message": "Údaje boli úspešne uložené."}), 200
 
     except Exception as e:
-        print("Chyba pri ukladani")
         return jsonify({"status": "error", "message": str(e)}), 400
 
 
@@ -497,7 +471,6 @@ def login():
 
 @app.route('/api/logout')
 def logout():
-    print("vOSLO")
     session.clear()  # vymaže všetky session dáta, teda aj 'user'
     response = make_response(jsonify({"message": "Odhlásený"}), 200)
     response.set_cookie('session', '', expires=0, path='/')
