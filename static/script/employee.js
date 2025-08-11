@@ -17,9 +17,7 @@ function searchEmployee() {
     //url kde sa bude posielat sprava na api
     const url = `http://localhost:5000/api/render_employee?search_input=${encodeURIComponent(input_string)}`;
 
-    fetch(url, {
-        method: 'GET'
-    })
+    fetch(url, {method: 'GET'})
         .then(response => response.json())
         .then(data => {
             var name_json = data.name;
@@ -65,7 +63,7 @@ function add_key() {
     var why = document.getElementById('why_id').value;
     const isChecked = document.getElementById('special_checkbox').checked;
 
-
+    //spracovanie dátumu
     var parts = date.split('-');
     var formattedDate = parts[2] + '.' + parts[1] + '.' + parts[0];
 

@@ -155,18 +155,17 @@ const registrationContent = `
 
 
 function login_fun() {
-  console.log('login');
-
-
+  //získanie údajov z formularú Login
   name_guard = document.getElementById('input_login_1').value;
   chip = document.getElementById('input_login_2').value;
-  console.log(name_guard);
-  console.log(chip);
+
+  //skontrola, či sú všetky údaje zadane
   if (!name_guard && !chip) {
     alert('Nezadali ste všetky údaje')
     return;
   }
 
+  //fetch request na server, ktorý vráti odpoveď o zalogovaní
   fetch('http://localhost:5000/api/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -174,6 +173,7 @@ function login_fun() {
   })
     .then(response => response.json())
     .then(data => {
+      //ak vráti status "success", tak nastavíme isLoggedIn na true a nastavi stránku na zadávanie klúčov
       if (data.status === "success") {
         window.location.href = "#keys";
         isLoggedIn = true;
@@ -186,6 +186,8 @@ function login_fun() {
 
 };
 
+
+//Nastavenie že ak používatel nie je prihlásený, tak nevie listovat v odkazoch
 document.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', function (e) {
     if (!isLoggedIn) {
@@ -195,6 +197,8 @@ document.querySelectorAll('a').forEach(link => {
   });
 });
 
+
+//funkcia na odhlásenie
 function logout(event) {
   event.preventDefault(); // Zastaví reload stránky
 
