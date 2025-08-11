@@ -45,8 +45,7 @@ function delete_guest_button() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ delete_input })  // Kratšia verzia zápisu (ES6)
     })
-    .then(response =>{response.json()
-    })
+    .then(response => response.text())
     .then(html => {
         document.getElementById("personInfo").innerHTML = html;
     })

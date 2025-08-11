@@ -43,7 +43,13 @@ def add_guest():
         currentTime = data['currentTime'] 
         chip_number = data['chip']
 
-        vratnik = session['vratnik']
+        if 'vratnik' in session:
+            # session obsahuje kľúč 'vratnik'
+            vratnik = session['vratnik']
+        else:
+            # session neobsahuje 'vratnik'
+            print("voslo do podmienky guest")
+            return jsonify({"status": "error", "message": "Nie si prihlásený alebo session vypršala"}), 401
 
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
@@ -99,14 +105,15 @@ def load_history():
         if conn:
             conn.close()
 
-def add_history(chip_number):
+def add_history(chip_number, conn):
+    cur = None
     try:
+        if 'vratnik' in session:
+            vratnik = session['vratnik']
+        else:
+            return jsonify({"status": "error", "message": "Nie si prihlásený alebo session vypršala"}), 401
 
-        vratnik = session['vratnik']
-
-        conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
-
         cur.execute("SELECT meno FROM hostia WHERE cip = %s", (chip_number,))
         result = cur.fetchone()
 
@@ -120,19 +127,19 @@ def add_history(chip_number):
 
         cur.execute(
             "INSERT INTO historia (meno, cas, cip, vydal) VALUES (%s, %s, %s, %s)",
-            (guest_name, formatted_time, chip_number,vratnik)
+            (guest_name, formatted_time, chip_number, vratnik)
         )
         conn.commit()
         print("Záznam o vrátení bol úspešne uložený do histórie.")
 
     except Exception as e:
         print(f"Chyba pri ukladaní histórie: {e}")
+        raise
 
     finally:
         if cur:
             cur.close()
-        if conn:
-            conn.close()
+
 
 @app.route('/api/search_guests', methods=['GET'])
 def search_guests():
@@ -165,32 +172,45 @@ def search_guests():
 @app.route('/api/delete_guests', methods=['POST'])
 def delete_guests():
     try:
+        print("voslo do funkcie")
         data = request.get_json()
         chip_to_delete = data.get('delete_input')
 
+
         if(not chip_to_delete.isnumeric()):
-            return
+            return jsonify({"status": "error", "message": "Neplatný čip."}), 400
 
         chip_to_delete = int(chip_to_delete)
-        
+
+        print("pripojenie na databázu")
+
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
 
         # 1. Zmaž hosťa podľa čipu
         cur.execute("DELETE FROM Hostia WHERE Cip = %s", (chip_to_delete,))
 
-        add_history(chip_to_delete)
+
+        print("Pridanie add_history pred")
+
+        add_history(chip_to_delete , conn)
+
+        print("Pridanie add_history po")
 
         # 2. Ulož zmenu
         conn.commit()
 
+
+        print("Nacitavanie hostia")
         # 3. Načítaj aktualizovaný zoznam hostí
-        cur.execute("SELECT meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM Hostia")
+        cur.execute("SELECT meno, zamestnanec, prichod, odchod, preco, cip FROM Hostia")
         rows = cur.fetchall()
         columns = [desc[0] for desc in cur.description]
 
         cur.close()
         conn.close()
+
+        print("Generovanie html")
 
         df = pd.DataFrame(rows, columns=columns)
         html_table = df.to_html(escape=False, index=False, table_id="table_of_guests")
@@ -203,7 +223,13 @@ def delete_guests():
 @app.route('/api/render_employee', methods=['GET'])
 def render_employee():
     try:
+
+        if 'vratnik' not in session:
+                return jsonify({"status": "error", "message": "Nie si prihlásený alebo session vypršala"}), 401
+        
+        
         input_value = request.args.get('search_input')
+        
         if not input_value:
             return jsonify({"status": "error", "message": "Chýbajúci vstup."}), 400
 
@@ -284,15 +310,14 @@ def add_key():
         date = data.get('date_id')
         why = data.get('why_id')
         
+        
         if 'vratnik' in session:
             # session obsahuje kľúč 'vratnik'
             vratnik = session['vratnik']
         else:
             # session neobsahuje 'vratnik'
             return jsonify({"status": "error", "message": "Nie si prihlásený alebo session vypršala"})
-
-        print(data)
-
+        
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
 
@@ -300,29 +325,21 @@ def add_key():
         cur.execute("SELECT 1 FROM Kluce WHERE Kluc = %s", (key,))
         if cur.fetchone():
             return jsonify({"status": "error", "message": "Tento kľúč už je vydaný!"}), 400
-
-        print("voslo sem prvu podmienku")
         
         # Over, či meno existuje v tabuľke zamestnancov
         cur.execute("SELECT 1 FROM Zamestnanci WHERE Meno = %s", (name,))
         if not cur.fetchone():
             return jsonify({"status": "error", "message": f"Meno '{name}' neexistuje v databáze zamestnancov."}), 400
-
-        print("voslo sem druhu podmienku")
+        
         # Vlož nový záznam
         cur.execute(
             "INSERT INTO Kluce (Kluc, Meno, Preco, Cas, vydal) VALUES (%s, %s, %s, %s, %s)",
             (key, name, why, date,vratnik)
         )
 
-        print("voslo sem execute")
-
         conn.commit()
         cur.close()
         conn.close()
-
-
-        print("vlozenie ukoncene")
 
         return jsonify({"status": "success", "message": "Údaje boli úspešne uložené."}), 200
 
@@ -351,6 +368,10 @@ def get_name_by_chip(chip):
 @app.route('/api/return_keys', methods=['POST'])
 def return_keys():
     try:
+
+        if 'vratnik' not in session:
+                return jsonify({"status": "error", "message": "Nie si prihlásený alebo session vypršala"}), 401
+
         data = request.get_json()
 
         name = data.get('name_return')

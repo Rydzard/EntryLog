@@ -18,7 +18,13 @@ function searchEmployee() {
     const url = `http://localhost:5000/api/render_employee?search_input=${encodeURIComponent(input_string)}`;
 
     fetch(url, {method: 'GET'})
-        .then(response => response.json())
+        .then(response => {
+            if (response.status === 401) {
+                alert("Nie si prihlásený alebo tvoja session vypršala.");
+                throw new Error("Unauthorized");
+            }
+            return response.json();
+        })
         .then(data => {
             var name_json = data.name;
             var chip_json = data.chip;
