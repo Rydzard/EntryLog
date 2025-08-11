@@ -9,12 +9,17 @@ from datetime import datetime,timedelta
 from werkzeug.security import check_password_hash
 import secrets
 
+from sqlalchemy import create_engine
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)  # musí byť nastavený, inak session nebude fungovať
 app.permanent_session_lifetime = timedelta(days=1)
 
 CORS(app)
+
+def get_engine():
+    engine = create_engine('postgresql+psycopg2://myuser:mypassword@localhost:5432/mydatabase')
+    return engine
 
 def connect_to_database(dbname, user, password, host='localhost', port='5432'):
     conn = psycopg2.connect(
@@ -37,9 +42,6 @@ def add_guest():
         why = data['why']
         currentTime = data['currentTime'] 
         chip_number = data['chip']
-        
-        if 'vratnik' not in session:
-            return jsonify({"error": "Unauthorized"}), 401
 
         vratnik = session['vratnik']
 
@@ -99,9 +101,6 @@ def load_history():
 
 def add_history(chip_number):
     try:
-
-        if 'vratnik' not in session:
-            return jsonify({"error": "Unauthorized"}), 401
 
         vratnik = session['vratnik']
 
@@ -278,16 +277,19 @@ def render_keys(meno):
 @app.route('/api/add_key', methods=['POST'])
 def add_key():
     try:
+       
         data = request.get_json()
         name = data.get('name')
         key = data.get('key')
         date = data.get('date_id')
         why = data.get('why_id')
-
-        if 'vratnik' not in session:
-            return jsonify({"error": "Unauthorized"}), 401
         
-        vratnik = session['vratnik']
+        if 'vratnik' in session:
+            # session obsahuje kľúč 'vratnik'
+            vratnik = session['vratnik']
+        else:
+            # session neobsahuje 'vratnik'
+            return "Nie si prihlásený alebo session vypršala", 401
 
         print(data)
 
@@ -299,23 +301,33 @@ def add_key():
         if cur.fetchone():
             return jsonify({"status": "error", "message": "Tento kľúč už je vydaný!"}), 400
 
+        print("voslo sem prvu podmienku")
+        
         # Over, či meno existuje v tabuľke zamestnancov
         cur.execute("SELECT 1 FROM Zamestnanci WHERE Meno = %s", (name,))
         if not cur.fetchone():
             return jsonify({"status": "error", "message": f"Meno '{name}' neexistuje v databáze zamestnancov."}), 400
 
+        print("voslo sem druhu podmienku")
         # Vlož nový záznam
         cur.execute(
             "INSERT INTO Kluce (Kluc, Meno, Preco, Cas, vydal) VALUES (%s, %s, %s, %s, %s)",
             (key, name, why, date,vratnik)
         )
+
+        print("voslo sem execute")
+
         conn.commit()
         cur.close()
         conn.close()
 
+
+        print("vlozenie ukoncene")
+
         return jsonify({"status": "success", "message": "Údaje boli úspešne uložené."}), 200
 
     except Exception as e:
+        print("Chyba pri ukladani")
         return jsonify({"status": "error", "message": str(e)}), 400
 
 

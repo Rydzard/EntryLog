@@ -85,30 +85,17 @@ function add_key() {
         formattedDate = "Nepriradené"
     }
 
-    //vytvoríme url kde sa bude posielat sprava na api metodou post
     fetch('http://localhost:5000/api/add_key', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, key, date_id: formattedDate, why_id: why })
     })
-        .then(response =>{ 
-            if (response.status === 401) {
-                console.warn("Cookie chýba alebo je neplatná");
-                window.location.href = "/";
-                return;
-            }
-            response.json()})  // ← opravene: voláme json ako funkciu
-        .then(data => {
-            if (data.status === "success") {
-                alert(data.message);
-            } else {
-                alert("Chyba: " + data.message);
-            }
-        })
-        .catch(error => {
-            console.error("Chyba pri požiadavke:", error);
-            alert("Nastala chyba pri komunikácii so serverom.");
-        });
+    .then(response => response.json())  // bez zložených zátvoriek, alebo s explicitným return
+    .then(data => alert(data.message))
+    .catch(error => {
+        console.error("Chyba pri požiadavke:", error);
+        alert("Nastala chyba pri komunikácii so serverom.");
+    });
 }
 
 function return_key() {

@@ -45,13 +45,7 @@ function delete_guest_button() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ delete_input })  // Kratšia verzia zápisu (ES6)
     })
-    .then(response =>{ 
-        if (response.status === 401) {
-            console.warn("Cookie chýba alebo je neplatná");
-            window.location.href = "/";
-            return;
-        }
-        response.json()
+    .then(response =>{response.json()
     })
     .then(html => {
         document.getElementById("personInfo").innerHTML = html;
