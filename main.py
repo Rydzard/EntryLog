@@ -48,7 +48,6 @@ def add_guest():
             vratnik = session['vratnik']
         else:
             # session neobsahuje 'vratnik'
-            print("voslo do podmienky guest")
             return jsonify({"status": "error", "message": "Nie si prihlásený alebo session vypršala"}), 401
 
         conn = connect_to_database("mydatabase","myuser","mypassword")
@@ -144,6 +143,10 @@ def add_history(chip_number, conn):
 @app.route('/api/search_guests', methods=['GET'])
 def search_guests():
     try:
+
+        if 'vratnik' not in session:
+                return jsonify({"status": "error", "message": "Nie si prihlásený alebo session vypršala"}), 401
+
         input_string = request.args.get('search_input')
 
         conn = connect_to_database("mydatabase","myuser","mypassword")
@@ -167,15 +170,16 @@ def search_guests():
     except Exception as e:
         return str(e), 500
 
-
-
 @app.route('/api/delete_guests', methods=['POST'])
 def delete_guests():
     try:
+
+        if 'vratnik' not in session:
+                return jsonify({"status": "error", "message": "Nie si prihlásený alebo session vypršala"}), 401
+
         print("voslo do funkcie")
         data = request.get_json()
         chip_to_delete = data.get('delete_input')
-
 
         if(not chip_to_delete.isnumeric()):
             return jsonify({"status": "error", "message": "Neplatný čip."}), 400
@@ -200,10 +204,9 @@ def delete_guests():
         # 2. Ulož zmenu
         conn.commit()
 
-
         print("Nacitavanie hostia")
         # 3. Načítaj aktualizovaný zoznam hostí
-        cur.execute("SELECT meno, zamestnanec, prichod, odchod, preco, cip FROM Hostia")
+        cur.execute("SELECT meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM Hostia")
         rows = cur.fetchall()
         columns = [desc[0] for desc in cur.description]
 
@@ -310,7 +313,7 @@ def add_key():
         date = data.get('date_id')
         why = data.get('why_id')
         
-        
+
         if 'vratnik' in session:
             # session obsahuje kľúč 'vratnik'
             vratnik = session['vratnik']

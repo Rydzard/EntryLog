@@ -20,7 +20,13 @@ function search_guest_button() {
     fetch(`http://localhost:5000/api/search_guests?search_input=${encodeURIComponent(search_input)}`, {
         method: 'GET'
     })
-        .then(response => response.text())
+        .then(response => {
+            if (response.status === 401) {
+                alert("Nie si prihlásený alebo tvoja session vypršala.");
+                throw new Error("Unauthorized");
+            }
+            return response.text();
+        })
         .then(html => {
             document.getElementById("personInfo").innerHTML = html;
         })
@@ -45,7 +51,13 @@ function delete_guest_button() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ delete_input })  // Kratšia verzia zápisu (ES6)
     })
-    .then(response => response.text())
+    .then(response => {
+            if (response.status === 401) {
+                alert("Nie si prihlásený alebo tvoja session vypršala.");
+                throw new Error("Unauthorized");
+            }
+            return response.text();
+    })
     .then(html => {
         document.getElementById("personInfo").innerHTML = html;
     })
