@@ -289,7 +289,7 @@ def add_key():
             vratnik = session['vratnik']
         else:
             # session neobsahuje 'vratnik'
-            return "Nie si prihlásený alebo session vypršala", 401
+            return jsonify({"status": "error", "message": "Nie si prihlásený alebo session vypršala"})
 
         print(data)
 
