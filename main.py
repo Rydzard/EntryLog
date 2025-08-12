@@ -1,4 +1,4 @@
-from flask import Flask, request ,jsonify, make_response, render_template, session
+from flask import Flask, request ,jsonify, make_response, session
 from blueprints.db import connect_to_database
 import pandas as pd
 from flask_cors import CORS
@@ -70,10 +70,6 @@ def logout():
     response.set_cookie('session', '', expires=0, path='/')
     return response
 
-
-@app.route('/')
-def home():
-    return render_template('app.html')
 
 if __name__ == "__main__":
     app.run(ssl_context=('certifikat/localhost+2.pem', 'certifikat/localhost+2-key.pem'), port=5000, host='127.0.0.1')
