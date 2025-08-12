@@ -13,10 +13,19 @@ app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)  # musí byť nastavený, inak session nebude fungovať
 app.permanent_session_lifetime = timedelta(days=1)
 
+# Toto zabezpečí, že cookie pre session bude fungovať len cez HTTPS
+app.config['SESSION_COOKIE_SECURE'] = True  
+
+# Odporúčané ďalšie bezpečnostné nastavenia
+app.config['SESSION_COOKIE_HTTPONLY'] = True  # aby cookie nebolo dostupné JS
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+
+
+
 app.register_blueprint(guests_bp)
 app.register_blueprint(employee_bp)
 
-CORS(app)
+CORS(app, supports_credentials=True)
 
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -67,4 +76,4 @@ def home():
     return render_template('app.html')
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    app.run(ssl_context=('certifikat/localhost+2.pem', 'certifikat/localhost+2-key.pem'), port=5000, host='127.0.0.1')

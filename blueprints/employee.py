@@ -81,7 +81,7 @@ def render_keys(meno):
         if 'meno' in df.columns:
             df = df.drop(columns=['meno'])
 
-        html_table = df.to_html(escape=False, index=False, table_id="table_of_guests")
+        html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
         return html_table
 
     except Exception as e:
@@ -207,7 +207,7 @@ def load_keys_database():
 
         # Konverzia na DataFrame pre HTML tabuľku
         df = pd.DataFrame(rows, columns=["Klúč", "Meno", "Prečo", "Kedy", "Vydal"])
-        html_table = df.to_html(escape=False, index=False, table_id="table_of_guests")
+        html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
 
         cur.close()
         conn.close()
@@ -231,7 +231,7 @@ def search_key():
 
         # Premena na HTML tabuľku
         df = pd.DataFrame(rows, columns=["Klúč", "Meno", "Prečo", "Kedy"])
-        html_table = df.to_html(escape=False, index=False, table_id="table_of_guests")
+        html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
 
         cur.close()
         conn.close()

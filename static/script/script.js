@@ -1,5 +1,5 @@
 function load_guests_table() {
-    fetch('http://localhost:5000/api/load_guests')
+    fetch('https://localhost:5000/api/load_guests')
         .then(response => response.text())
         .then(html => {
             document.getElementById("personInfo").innerHTML = html;
@@ -17,8 +17,9 @@ function search_guest_button() {
         return
     }
 
-    fetch(`http://localhost:5000/api/search_guests?search_input=${encodeURIComponent(search_input)}`, {
-        method: 'GET'
+    fetch(`https://localhost:5000/api/search_guests?search_input=${encodeURIComponent(search_input)}`, {
+        method: 'GET',
+        credentials: 'include'
     })
         .then(response => {
             if (response.status === 401) {
@@ -46,9 +47,10 @@ function delete_guest_button() {
         return
     }
 
-    fetch('http://localhost:5000/api/delete_guests', {
+    fetch('https://localhost:5000/api/delete_guests', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ delete_input })  // Kratšia verzia zápisu (ES6)
     })
     .then(response => {

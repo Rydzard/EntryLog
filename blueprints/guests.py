@@ -59,7 +59,7 @@ def load_guests():
     conn = connect_to_database("mydatabase","myuser","mypassword")
     try:
         df = pd.read_sql('SELECT meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM hostia;', conn)
-        html_table = df.to_html(escape=False, index=False, table_id="table_of_guests")
+        html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
         return html_table, 200
     except Exception as e:
         return str(e), 500
@@ -73,7 +73,7 @@ def load_history():
         conn = connect_to_database("mydatabase","myuser","mypassword")
         # predpokladám, že tabulka História sa volá "historia" (malé písmená, podľa bežnej praxe)
         df = pd.read_sql('SELECT meno, cas, cip, vydal FROM historia;', conn)
-        html_table = df.to_html(escape=False, index=False, table_id="table_of_history")
+        html_table = df.to_html(escape=True, index=False, table_id="table_of_history")
         return html_table, 200
     except Exception as e:
         return str(e), 500
@@ -81,7 +81,7 @@ def load_history():
         if conn:
             conn.close()
 
-def add_history(chip_number, conn):
+def add_history(chip_number):
     cur = None
     try:
         if 'vratnik' in session:
@@ -89,6 +89,10 @@ def add_history(chip_number, conn):
         else:
             return jsonify({"status": "error", "message": "Nie si prihlásený alebo session vypršala"}), 401
 
+
+        print("Voslo do funkcie a aj preslo prvu podmienku")
+
+        conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
         cur.execute("SELECT meno FROM hostia WHERE cip = %s", (chip_number,))
         result = cur.fetchone()
@@ -106,6 +110,9 @@ def add_history(chip_number, conn):
             (guest_name, formatted_time, chip_number, vratnik)
         )
         conn.commit()
+
+
+
 
     except Exception as e:
         print(f"Chyba pri ukladaní histórie: {e}")
@@ -139,7 +146,7 @@ def search_guests():
         conn.close()
 
         df = pd.DataFrame(rows, columns=columns)
-        html_table = df.to_html(escape=False, index=False, table_id="table_of_guests")
+        html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
 
         return html_table, 200
 
@@ -167,7 +174,7 @@ def delete_guests():
         # 1. Zmaž hosťa podľa čipu
         cur.execute("DELETE FROM Hostia WHERE Cip = %s", (chip_to_delete,))
 
-        add_history(chip_to_delete , conn)
+        add_history(chip_to_delete)
 
         # 2. Ulož zmenu
         conn.commit()
@@ -181,7 +188,7 @@ def delete_guests():
         conn.close()
 
         df = pd.DataFrame(rows, columns=columns)
-        html_table = df.to_html(escape=False, index=False, table_id="table_of_guests")
+        html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
 
         return html_table, 200
 

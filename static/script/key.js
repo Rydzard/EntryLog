@@ -1,5 +1,5 @@
 function load_keys_database() {
-    fetch('http://localhost:5000/api/load_keys_database')
+    fetch('https://localhost:5000/api/load_keys_database')
     .then(response => response.text())
     .then(html => {
         document.getElementById("historyInfo").innerHTML = html;
@@ -22,8 +22,9 @@ function search_key() {
         return
     }
 
-    fetch(`http://localhost:5000/api/search_key?key_number=${encodeURIComponent(key_number)}`, {
-        method: 'GET'
+    fetch(`https://localhost:5000/api/search_key?key_number=${encodeURIComponent(key_number)}`, {
+        method: 'GET',
+        credentials: 'include'
     })
     .then(response => response.text())
     .then(html => {

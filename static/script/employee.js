@@ -15,9 +15,12 @@ function searchEmployee() {
     }
 
     //url kde sa bude posielat sprava na api
-    const url = `http://localhost:5000/api/render_employee?search_input=${encodeURIComponent(input_string)}`;
+    const url = `https://localhost:5000/api/render_employee?search_input=${encodeURIComponent(input_string)}`;
 
-    fetch(url, {method: 'GET'})
+    fetch(url, {
+        method: 'GET',
+        credentials: 'include'
+    })
         .then(response => {
             if (response.status === 401) {
                 alert("Nie si prihlásený alebo tvoja session vypršala.");
@@ -91,9 +94,10 @@ function add_key() {
         formattedDate = "Nepriradené"
     }
 
-    fetch('http://localhost:5000/api/add_key', {
+    fetch('https://localhost:5000/api/add_key', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ name, key, date_id: formattedDate, why_id: why })
     })
     .then(response => response.json())  // bez zložených zátvoriek, alebo s explicitným return
@@ -130,9 +134,10 @@ function return_key() {
         return;
     }
 
-    fetch('http://localhost:5000/api/return_keys', {
+    fetch('https://localhost:5000/api/return_keys', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ name_return: name, key_return: key, chip_return: chip })  // názvy musia sedieť s backendom
     })
         .then(response => response.json())  // <-- Tu bol problém: chýbali zátvorky

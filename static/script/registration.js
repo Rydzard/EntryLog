@@ -30,9 +30,10 @@ function add_guest()
     }
 
     // Poslanie dát na server pomocou fetch
-    fetch('http://localhost:5000/api/add_guest', {
+    fetch('https://localhost:5000/api/add_guest', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ name , who, currentTime, formattedDate, why,chip })  // Kratšia verzia zápisu (ES6)
     })
     .then(response => {

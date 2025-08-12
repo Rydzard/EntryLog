@@ -166,9 +166,10 @@ function login_fun() {
   }
 
   //fetch request na server, ktorý vráti odpoveď o zalogovaní
-  fetch('http://localhost:5000/api/login', {
+  fetch('https://localhost:5000/api/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    credentials: 'include', 
     body: JSON.stringify({ name_guard, chip })  // Kratšia verzia zápisu (ES6)
   })
     .then(response => response.json())
@@ -198,17 +199,13 @@ document.querySelectorAll('a').forEach(link => {
 });
 
 
-//funkcia na odhlásenie
 function logout(event) {
   event.preventDefault(); // Zastaví reload stránky
 
   fetch('/api/logout')
     .then(response => {
       if (!response.ok) throw new Error("Network response was not ok");
-      return response.json();
-    })
-    .then(data => {
-      alert(data.message);
+      // Nepotrebujeme parsovať JSON, stačí úspešná odpoveď
       window.location.href = "/"; // presmeruj na login stránku
     })
     .catch(error => {
