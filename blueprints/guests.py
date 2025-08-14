@@ -61,8 +61,8 @@ def add_guest():
 def load_guests():
     conn = connect_to_database("mydatabase","myuser","mypassword")
     try:
-        df = pd.read_sql('SELECT meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM hostia;', conn)
-        df["Akcia"] = ""
+        df = pd.read_sql('SELECT id, meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM hostia;', conn)
+        df[""] = ""
         html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
 
         return html_table, 200
@@ -195,5 +195,43 @@ def delete_guests():
 
         return html_table, 200
 
+    except Exception as e:
+        return str(e), 500
+
+@guests_bp.route('/api/delete_guests_by_id', methods=['POST'])
+def delete_guests_by_id():
+    try:
+        if 'vratnik' not in session:
+                return jsonify({"status": "error", "message": "Nie si prihlásený alebo session vypršala"}), 401
+
+        data = request.get_json()
+        chip_to_delete = data.get('delete_id')
+
+        if not chip_to_delete or chip_to_delete.strip() == "":
+            return jsonify({"status": "error", "message": "Chýba identifikátor"}), 400
+
+        # chip_to_delete nech je rovno string, nech je to číslo alebo text
+        conn = connect_to_database("mydatabase","myuser","mypassword")
+        cur = conn.cursor()
+
+        # 1. Zmaž hosťa podľa čipu alebo textu
+        cur.execute("DELETE FROM Hostia WHERE id = %s", (chip_to_delete,))
+        #add_history(chip_to_delete)
+
+        # 2. Ulož zmenu
+        conn.commit()
+
+        # 3. Načítaj aktualizovaný zoznam hostí
+        cur.execute("SELECT meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM Hostia")
+        rows = cur.fetchall()
+        columns = [desc[0] for desc in cur.description]
+
+        cur.close()
+        conn.close()
+
+        df = pd.DataFrame(rows, columns=columns)
+        html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
+
+        return html_table, 200
     except Exception as e:
         return str(e), 500

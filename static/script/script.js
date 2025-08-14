@@ -7,12 +7,19 @@ function load_guests_table() {
 
             // pridanie tlačidiel do stĺpca Akcia
             const table = container.querySelector("#table_of_guests");
-            for (let i = 1; i < table.rows.length; i++) { // začína od 1, aby sme preskočili hlavičku
-                const cip = table.rows[i].cells[5].textContent; // predpokladáme, že cip je 6. stĺpec (index 5)
-                const actionCell = table.rows[i].cells[7];      // Akcia je 8. stĺpec (index 7)
+
+
+            for (let i = 0; i < table.rows.length; i++) {
+                table.rows[i].cells[0].style.display = "none";
+            }
+
+            // Pridanie tlačidla do posledného stĺpca
+            for (let i = 1; i < table.rows.length; i++) { // začína od 1, preskočí hlavičku
+                const guestId = table.rows[i].cells[0].textContent; // ID stále vieme z prvého stĺpca
+                const actionCell = table.rows[i].cells[8]; // 8. stĺpec, kde chceme tlačidlo
                 const btn = document.createElement("button");
                 btn.textContent = "Odstrániť";
-                btn.onclick = () => deleteGuest(cip);
+                btn.onclick = () => deleteGuest(guestId);
                 actionCell.appendChild(btn);
             }
         })
@@ -72,31 +79,27 @@ function delete_guest_button() {
             return response.text();
     })
     .then(html => {
-        document.getElementById("personInfo").innerHTML = html;
+        load_guests_table();
     })
     .catch(console.error)
-
-    load_guests_table();
 }
 
-function deleteGuest(delete_input) {
-    fetch('https://localhost:5000/api/delete_guests', {
+function deleteGuest(delete_id) {
+    fetch('https://localhost:5000/api/delete_guests_by_id', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ delete_input })  // Kratšia verzia zápisu (ES6)
+        body: JSON.stringify({ delete_id })
     })
     .then(response => {
-            if (response.status === 401) {
-                alert("Nie si prihlásený alebo tvoja session vypršala.");
-                throw new Error("Unauthorized");
-            }
-            return response.text();
+        if (response.status === 401) {
+            alert("Nie si prihlásený alebo tvoja session vypršala.");
+            throw new Error("Unauthorized");
+        }
+        return response.text();
     })
     .then(html => {
-        document.getElementById("personInfo").innerHTML = html;
+        load_guests_table();
     })
-    .catch(console.error)
-
-    load_guests_table();
+    .catch(console.error);
 }

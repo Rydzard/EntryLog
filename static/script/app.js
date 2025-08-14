@@ -144,7 +144,7 @@ const registrationContent = `
 
             <p>Do kedy</p>
             <input type="date" id="date_id"> 
-            <input type="time" id="chec">
+            <input type="time" id="time_id">
             
             <p>Prečo</p>
             <select id="why_id">
@@ -155,7 +155,7 @@ const registrationContent = `
             <br>
               <p>
                 <label>
-                    <input type="checkbox" id="registration_checkbox"">
+                    <input type="checkbox" id="registration_checkbox">
                     Bez čipu
                 </label>
               </p>

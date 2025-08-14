@@ -64,7 +64,7 @@ def login():
 
 @app.route('/api/logout')
 def logout():
-    session.clear()  # vymaže všetky session dáta, teda aj 'user'
+    session.pop('vratnik', default=None)  # vymaže všetky session dáta, teda aj 'user'
     response = make_response(jsonify({"message": "Odhlásený"}), 200)
     response.set_cookie('session', '', expires=0, path='/')
     return response
