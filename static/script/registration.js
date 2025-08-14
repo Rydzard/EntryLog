@@ -8,6 +8,9 @@ function add_guest()
     var currentTime = getCurrentTime().toString();
     var time = document.getElementById("time_id").value.trim();
 
+
+    console.log(currentTime)
+
     // overenie vstupov
     if (!name || !currentTime || !who || !dateStr || !why || !time) {
         alert("Zadaj všetky povinné údaje (meno, kto pozval, dátum a dôvod)");
@@ -63,5 +66,8 @@ function getCurrentTime(){
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = today.getFullYear();
 
-    return (dd+ "." + mm + "." + yyyy)
+    var hh = String(today.getHours()).padStart(2, '0');
+    var min = String(today.getMinutes()).padStart(2, '0');
+
+    return dd + "." + mm + "." + yyyy + " " + hh + ":" + min;
 }
