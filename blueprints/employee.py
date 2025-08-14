@@ -226,7 +226,7 @@ def search_key():
         cur = conn.cursor()
 
         # Vyhľadaj kľúč v databáze
-        cur.execute("SELECT Kluc, Meno, Preco, Cas FROM Kluce WHERE Kluc = %s", (int(key),))
+        cur.execute("SELECT Kluc, Meno, Preco, Cas FROM Kluce WHERE Kluc = %s",(key,))
         rows = cur.fetchall()
 
         # Premena na HTML tabuľku

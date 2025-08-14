@@ -1,6 +1,5 @@
 from flask import Flask, request ,jsonify, make_response, session
 from blueprints.db import connect_to_database
-import pandas as pd
 from flask_cors import CORS
 from datetime import timedelta
 from blueprints.guests import guests_bp

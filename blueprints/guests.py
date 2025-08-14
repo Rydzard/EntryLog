@@ -35,8 +35,11 @@ def add_guest():
             return jsonify({"status": "error", "message": f"Meno '{who}' neexistuje v databáze zamestnancov."}), 400
         
         cur.execute("SELECT 1 FROM hostia WHERE cip = %s", (chip_number,))
-        if cur.fetchone():
+        exists = cur.fetchone()
+
+        if chip_number.isnumeric() and exists:
             return jsonify({"status": "error", "message": f"Čip '{chip_number}' už bol niekomu pridelený."}), 400
+
 
         insert_query = sql.SQL('''
             INSERT INTO Hostia ("meno", "zamestnanec", "prichod", "odchod", "preco", "cip", "vydal")
@@ -59,7 +62,9 @@ def load_guests():
     conn = connect_to_database("mydatabase","myuser","mypassword")
     try:
         df = pd.read_sql('SELECT meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM hostia;', conn)
+        df["Akcia"] = ""
         html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
+
         return html_table, 200
     except Exception as e:
         return str(e), 500
@@ -163,17 +168,15 @@ def delete_guests():
         data = request.get_json()
         chip_to_delete = data.get('delete_input')
 
-        if(not chip_to_delete.isnumeric()):
-            return jsonify({"status": "error", "message": "Neplatný čip."}), 400
+        if not chip_to_delete or chip_to_delete.strip() == "":
+            return jsonify({"status": "error", "message": "Chýba identifikátor"}), 400
 
-        chip_to_delete = int(chip_to_delete)
-
+        # chip_to_delete nech je rovno string, nech je to číslo alebo text
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
 
-        # 1. Zmaž hosťa podľa čipu
+        # 1. Zmaž hosťa podľa čipu alebo textu
         cur.execute("DELETE FROM Hostia WHERE Cip = %s", (chip_to_delete,))
-
         add_history(chip_to_delete)
 
         # 2. Ulož zmenu

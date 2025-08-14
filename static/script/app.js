@@ -71,11 +71,11 @@ const guestsContent = `
             <p>Vyhľadať návštevníka(Meno)</p><br>
             <input class="styled-input" id="search_input_guests"> 
             <button onclick="search_guest_button()">Hľadať návštevníka</button>
-
             <br><br>
 
               <p>Vymazať návštevníka (Čip)</p>
               <button onclick="delete_guest_button()">Vymazať návštevníka</button>
+
             </div>
         </div>`;
 
@@ -144,13 +144,24 @@ const registrationContent = `
 
             <p>Do kedy</p>
             <input type="date" id="date_id"> 
+            <input type="time" id="chec">
             
             <p>Prečo</p>
             <select id="why_id">
                 <option value="Návšteva">Návšteva</option>
                 <option value="Pohovor">Pohovor</option>
             </select> 
+
+            <br>
+              <p>
+                <label>
+                    <input type="checkbox" id="registration_checkbox"">
+                    Bez čipu
+                </label>
+              </p>
+            <br>
             <button onclick="add_guest()">Pridať návštevníka</button>
+
         </div>`;
 
 
@@ -169,7 +180,7 @@ function login_fun() {
   fetch('https://localhost:5000/api/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    credentials: 'include', 
+    credentials: 'include',
     body: JSON.stringify({ name_guard, chip })  // Kratšia verzia zápisu (ES6)
   })
     .then(response => response.json())
@@ -202,7 +213,7 @@ document.querySelectorAll('a').forEach(link => {
 function logout(event) {
   event.preventDefault(); // Zastaví reload stránky
 
-  fetch('/api/logout')
+  fetch('https://localhost:5000/api/logout')
     .then(response => {
       if (!response.ok) throw new Error("Network response was not ok");
       // Nepotrebujeme parsovať JSON, stačí úspešná odpoveď

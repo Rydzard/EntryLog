@@ -16,18 +16,27 @@ function add_guest()
 
     var formattedDate = `${day}.${month}.${year}`;
 
+    const isChecked = document.getElementById('registration_checkbox').checked;
     // overenie vstupov
     if (!name || !currentTime || !who || !formattedDate || !why) {
         alert("Zadaj všetky povinné údaje (meno, kto pozval, dátum a dôvod)");
         return; // zastaví funkciu, ak údaje chýbajú
     }
 
-    chip = prompt("Priložte kartu")
 
-    if(!chip || chip.length !== 10){
-        alert("Nesprávne zadali kartu")
-        return;
+    if(!isChecked){   
+        chip = prompt("Priložte kartu")
+
+        if(!chip || (chip && chip.length !== 10)){
+            alert("Nesprávne zadali kartu")
+            return;
+        }
     }
+
+    else{
+        chip = "Nepridané"
+    }
+
 
     // Poslanie dát na server pomocou fetch
     fetch('https://localhost:5000/api/add_guest', {

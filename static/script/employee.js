@@ -26,6 +26,12 @@ function searchEmployee() {
                 alert("Nie si prihlásený alebo tvoja session vypršala.");
                 throw new Error("Unauthorized");
             }
+
+            if (response.status === 404) {
+                alert("Zamestnanec neexistuje");
+                throw new Error("Unauthorized");
+            }
+
             return response.json();
         })
         .then(data => {
@@ -34,7 +40,7 @@ function searchEmployee() {
             var department_json = data.department;
 
             //otvorí nové okno s velkostou a nastaví subor css ktorý sa otovrí pre toto okno
-            const myWindow = window.open("", "", "width=1000,height=500");
+            const myWindow = window.open("", "", "width=1200,height=800");
             const cssURL = "static/styles/style.css";
 
             //tu sa ešte všetko pridá css na začiatok html
@@ -100,12 +106,12 @@ function add_key() {
         credentials: 'include',
         body: JSON.stringify({ name, key, date_id: formattedDate, why_id: why })
     })
-    .then(response => response.json())  // bez zložených zátvoriek, alebo s explicitným return
-    .then(data => alert(data.message))
-    .catch(error => {
-        console.error("Chyba pri požiadavke:", error);
-        alert("Nastala chyba pri komunikácii so serverom.");
-    });
+        .then(response => response.json())  // bez zložených zátvoriek, alebo s explicitným return
+        .then(data => alert(data.message))
+        .catch(error => {
+            console.error("Chyba pri požiadavke:", error);
+            alert("Nastala chyba pri komunikácii so serverom.");
+        });
 }
 
 function return_key() {
