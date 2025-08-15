@@ -59,11 +59,9 @@ def add_guest():
 
 @guests_bp.route('/api/load_guests', methods=['GET'])
 def load_guests():
-
-    
     conn = connect_to_database("mydatabase","myuser","mypassword")
     try:
-        df = pd.read_sql('SELECT id, meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM hostia;', conn)
+        df = pd.read_sql('SELECT id, meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM hostia ORDER BY prichod DESC;', conn)
         df[""] = ""
         html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
 
@@ -80,7 +78,8 @@ def load_history():
     try:
         conn = connect_to_database("mydatabase","myuser","mypassword")
         # predpokladám, že tabulka História sa volá "historia" (malé písmená, podľa bežnej praxe)
-        df = pd.read_sql('SELECT meno, cas, cip, vydal FROM historia;', conn)
+        # Konverzia na DataFrame pre HTML tabuľku
+        df = pd.read_sql('SELECT Meno, Cas, cip, vydal FROM historia ORDER BY cas DESC;', conn)
         html_table = df.to_html(escape=True, index=False, table_id="table_of_history")
         return html_table, 200
     except Exception as e:
@@ -96,9 +95,6 @@ def add_history(chip_number):
             vratnik = session['vratnik']
         else:
             return jsonify({"status": "error", "message": "Nie si prihlásený alebo session vypršala"}), 401
-
-
-        print("Voslo do funkcie a aj preslo prvu podmienku")
 
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
@@ -148,12 +144,11 @@ def search_guests():
             (input_string + '%',)
         )
         rows = cur.fetchall()
-        columns = [desc[0] for desc in cur.description]
 
         cur.close()
         conn.close()
 
-        df = pd.DataFrame(rows, columns=columns)
+        df = pd.DataFrame(rows, columns=["Meno", "Zamestnanec", "Príchod", "Odchod" , "Prečo", "Čip", "Vydal"])
         html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
 
         return html_table, 200

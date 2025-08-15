@@ -38,7 +38,6 @@ function add_guest()
         chip = "Nepridané"
     }
 
-
     // Poslanie dát na server pomocou fetch
     fetch('https://localhost:5000/api/add_guest', {
         method: 'POST',

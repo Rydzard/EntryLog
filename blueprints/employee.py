@@ -81,6 +81,8 @@ def render_keys(meno):
         if 'meno' in df.columns:
             df = df.drop(columns=['meno'])
 
+                # Konverzia na DataFrame pre HTML tabuľku
+        df = pd.DataFrame(rows, columns=["Klúč","Prečo", "Čas", "Vydal"])
         html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
         return html_table
 
@@ -242,3 +244,26 @@ def search_key():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 400
 
+    
+@employee_bp.route('/api/load_history_keys', methods=['GET'])
+def load_history_keys():
+    try:
+        print("Voslo do historie klucov funkcii")
+        conn = connect_to_database("mydatabase","myuser","mypassword")
+        cur = conn.cursor()
+
+        # Načítaj všetky údaje z tabuľky Kluce
+        cur.execute("SELECT Kluc, Meno, Cas, Vydal FROM historia_kluce")
+        rows = cur.fetchall()
+
+        # Konverzia na DataFrame pre HTML tabuľku
+        df = pd.DataFrame(rows, columns=["Klúč", "Meno", "Kedy", "Vydal"])
+        html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
+
+        cur.close()
+        conn.close()
+
+        return html_table, 200
+    
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500

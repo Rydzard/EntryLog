@@ -32,3 +32,15 @@ function search_key() {
     })
     .catch(console.error)
 }
+
+function load_history_keys() {
+console.log("load_history_keys")
+fetch('https://localhost:5000/api/load_history_keys')
+    .then(response => response.text())
+    .then(html => {
+        document.getElementById("historyInfo").innerHTML = html;
+    })
+    .catch(error => {
+        console.error("Chyba pri načítaní hostí:", error);
+    });
+}

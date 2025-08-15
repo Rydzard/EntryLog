@@ -20,6 +20,9 @@ function render() {
   } else if (hash === 'history') {
     app.innerHTML = historyContent;
     load_history();
+  } else if (hash ==='history_keys'){
+    app.innerHTML = historyKeysContent;
+    load_history_keys();
   } else {
     app.innerHTML = login;
     isLoggedIn = false;
@@ -33,7 +36,8 @@ function changeCSS(hash) {
     guests: '../static/styles/style.css',
     employees: '../static/styles/employee.css',
     keys: '../static/styles/keys.css',
-    history: '../static/styles/history.css'
+    history: '../static/styles/history.css',
+    history_keys:'../static/styles/history.css'
   };
 
   // nastav štýl podľa hash, inak default
@@ -164,6 +168,10 @@ const registrationContent = `
 
         </div>`;
 
+const historyKeysContent = `
+    <div id="historyInfo" class="historyInfo">
+
+    </div>`;
 
 function login_fun() {
   //získanie údajov z formularú Login
