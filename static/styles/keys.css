@@ -269,3 +269,21 @@ ul li:hover ul.dropdown {
      background-color: #00376b;
      transform: scale(1.02);
 }
+
+#table_of_guests button {
+     background-color: #004e92;
+     color: white;
+     border: none;
+     padding: 12px 24px;
+     border-radius: 8px;
+     font-size: 16px;
+     cursor: pointer;
+     transition: background-color 0.3s ease, transform 0.2s ease;
+     margin-top: 10px;
+     width: 100%;
+}
+
+#table_of_guests button:hover {
+     background-color: #00376b;
+     transform: scale(1.02);
+}

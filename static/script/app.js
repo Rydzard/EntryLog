@@ -29,7 +29,6 @@ function render() {
   }
 }
 
-
 function changeCSS(hash) {
   const cssMap = {
     registration: '../static/styles/registration.css',

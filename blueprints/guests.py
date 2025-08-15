@@ -123,9 +123,6 @@ def add_history(chip_number):
         )
         conn.commit()
 
-
-
-
     except Exception as e:
         print(f"Chyba pri ukladaní histórie: {e}")
         raise
@@ -148,7 +145,7 @@ def search_guests():
         cur = conn.cursor()
 
         cur.execute(
-            "SELECT meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM Hostia WHERE meno ILIKE %s",
+            "SELECT id, meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM Hostia WHERE meno ILIKE %s",
             (input_string + '%',)
         )
         rows = cur.fetchall()
@@ -156,7 +153,8 @@ def search_guests():
         cur.close()
         conn.close()
 
-        df = pd.DataFrame(rows, columns=["Meno", "Zamestnanec", "Príchod", "Odchod" , "Prečo", "Čip", "Vydal"])
+        df = pd.DataFrame(rows, columns=["ID","Meno", "Zamestnanec", "Príchod", "Odchod" , "Dôvod", "Čip", "Vydal"])
+        df[""] = ""
         html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
 
         return html_table, 200

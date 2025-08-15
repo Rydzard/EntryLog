@@ -60,13 +60,13 @@ def render_employee():
         return jsonify({"status": "error", "message": str(e)}), 400
 
 
-def render_keys(meno):
+def render_keys(name):
     try:
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
 
         # Získaj kľúče priradené zamestnancovi podľa mena
-        cur.execute("SELECT kluc, preco, cas, vydal FROM kluce WHERE meno = %s", (meno,))
+        cur.execute("SELECT kluc, preco, cas, vydal FROM kluce WHERE meno = %s", (name,))
         rows = cur.fetchall()
         colnames = [desc[0] for desc in cur.description]
 
@@ -76,10 +76,10 @@ def render_keys(meno):
         if not rows:
             return "<p>Žiadne kľúče neboli nájdené.</p>"
 
-        # Vytvor Pandas DataFrame a odstráň stĺpec 'meno'
+        # Vytvor Pandas DataFrame a odstráň stĺpec 'name'
         df = pd.DataFrame(rows, columns=colnames)
-        if 'meno' in df.columns:
-            df = df.drop(columns=['meno'])
+        if 'name' in df.columns:
+            df = df.drop(columns=['name'])
 
                 # Konverzia na DataFrame pre HTML tabuľku
         df = pd.DataFrame(rows, columns=["Klúč","Prečo", "Čas", "Vydal"])
@@ -213,6 +213,7 @@ def load_keys_database():
 
         # Konverzia na DataFrame pre HTML tabuľku
         df = pd.DataFrame(rows, columns=["Klúč", "Meno", "Prečo", "Kedy", "Vydal"])
+        df[""] = ""
         html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
 
         cur.close()
@@ -232,11 +233,12 @@ def search_key():
         cur = conn.cursor()
 
         # Vyhľadaj kľúč v databáze
-        cur.execute("SELECT Kluc, Meno, Preco, Cas FROM Kluce WHERE Kluc = %s",(key,))
+        cur.execute("SELECT Kluc, Meno, Preco,Cas, vydal FROM Kluce WHERE Kluc = %s",(key,))
         rows = cur.fetchall()
 
         # Premena na HTML tabuľku
-        df = pd.DataFrame(rows, columns=["Klúč", "Meno", "Prečo", "Kedy"])
+        df = pd.DataFrame(rows, columns=["Klúč", "Meno", "Prečo", "Kedy","Vydal"])
+        df[""] = ""
         html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
 
         cur.close()
@@ -274,7 +276,6 @@ def load_history_keys():
 
 def add_history_keys(name,key,vratnik):
     try:
-        print("Voslo do historie klucov funkcii")
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
 

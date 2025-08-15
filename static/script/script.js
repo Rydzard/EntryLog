@@ -54,7 +54,27 @@ function search_guest_button() {
             return response.text();
         })
         .then(html => {
-            document.getElementById("personInfo").innerHTML = html;
+            const container = document.getElementById("personInfo");
+            container.innerHTML = html;
+
+            // pridanie tlačidiel do stĺpca Akcia
+            const table = container.querySelector("#table_of_guests");
+
+
+            for (let i = 0; i < table.rows.length; i++) {
+                table.rows[i].cells[0].style.display = "none";
+            }
+
+            // Pridanie tlačidla do posledného stĺpca
+            for (let i = 1; i < table.rows.length; i++) { // začína od 1, preskočí hlavičku
+                const guestId = table.rows[i].cells[0].textContent; // ID stále vieme z prvého stĺpca
+                const guestChip = table.rows[i].cells[6].textContent;
+                const actionCell = table.rows[i].cells[8]; // 8. stĺpec, kde chceme tlačidlo
+                const btn = document.createElement("button");
+                btn.textContent = "Odstrániť";
+                btn.onclick = () => deleteGuest(guestId,guestChip);
+                actionCell.appendChild(btn);
+            }
         })
         .catch(console.error)
 }
