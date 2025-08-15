@@ -1,6 +1,12 @@
 function load_guests_table() {
     fetch('https://localhost:5000/api/load_guests')
-        .then(response => response.text())
+        .then(response => {
+            if (response.status === 401) {
+                alert("Nie si prihlásený alebo tvoja session vypršala.");
+                throw new Error("Unauthorized");
+            }
+
+            return response.text()})
         .then(html => {
             const container = document.getElementById("personInfo");
             container.innerHTML = html;
@@ -16,10 +22,11 @@ function load_guests_table() {
             // Pridanie tlačidla do posledného stĺpca
             for (let i = 1; i < table.rows.length; i++) { // začína od 1, preskočí hlavičku
                 const guestId = table.rows[i].cells[0].textContent; // ID stále vieme z prvého stĺpca
+                const guestChip = table.rows[i].cells[6].textContent;
                 const actionCell = table.rows[i].cells[8]; // 8. stĺpec, kde chceme tlačidlo
                 const btn = document.createElement("button");
                 btn.textContent = "Odstrániť";
-                btn.onclick = () => deleteGuest(guestId);
+                btn.onclick = () => deleteGuest(guestId,guestChip);
                 actionCell.appendChild(btn);
             }
         })
@@ -84,12 +91,12 @@ function delete_guest_button() {
     .catch(console.error)
 }
 
-function deleteGuest(delete_id) {
+function deleteGuest(delete_id, delete_chip) {
     fetch('https://localhost:5000/api/delete_guests_by_id', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ delete_id })
+        body: JSON.stringify({ delete_id, delete_chip })
     })
     .then(response => {
         if (response.status === 401) {

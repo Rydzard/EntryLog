@@ -198,6 +198,7 @@ def return_keys():
 @employee_bp.route('/api/load_keys_database', methods=['GET'])
 def load_keys_database():
     try:
+
         conn = connect_to_database("mydatabase","myuser","mypassword")
         cur = conn.cursor()
 

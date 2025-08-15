@@ -8,9 +8,6 @@ function add_guest()
     var currentTime = getCurrentTime().toString();
     var time = document.getElementById("time_id").value.trim();
 
-
-    console.log(currentTime)
-
     // overenie vstupov
     if (!name || !currentTime || !who || !dateStr || !why || !time) {
         alert("Zadaj všetky povinné údaje (meno, kto pozval, dátum a dôvod)");

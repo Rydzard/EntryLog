@@ -59,6 +59,8 @@ def add_guest():
 
 @guests_bp.route('/api/load_guests', methods=['GET'])
 def load_guests():
+
+    
     conn = connect_to_database("mydatabase","myuser","mypassword")
     try:
         df = pd.read_sql('SELECT id, meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM hostia;', conn)
@@ -73,6 +75,7 @@ def load_guests():
 
 @guests_bp.route('/api/load_history', methods=['GET'])
 def load_history():
+
     conn = None
     try:
         conn = connect_to_database("mydatabase","myuser","mypassword")
@@ -205,9 +208,10 @@ def delete_guests_by_id():
                 return jsonify({"status": "error", "message": "Nie si prihlásený alebo session vypršala"}), 401
 
         data = request.get_json()
-        chip_to_delete = data.get('delete_id')
+        guest_to_delete = data.get('delete_id')
+        chip_to_delete = data.get('delete_chip')
 
-        if not chip_to_delete or chip_to_delete.strip() == "":
+        if not guest_to_delete or guest_to_delete.strip() == "":
             return jsonify({"status": "error", "message": "Chýba identifikátor"}), 400
 
         # chip_to_delete nech je rovno string, nech je to číslo alebo text
@@ -215,9 +219,10 @@ def delete_guests_by_id():
         cur = conn.cursor()
 
         # 1. Zmaž hosťa podľa čipu alebo textu
-        cur.execute("DELETE FROM Hostia WHERE id = %s", (chip_to_delete,))
-        #add_history(chip_to_delete)
+        cur.execute("DELETE FROM Hostia WHERE id = %s", (guest_to_delete,))
 
+        #pridat do historie ex navstevnika
+        add_history(chip_to_delete)
         # 2. Ulož zmenu
         conn.commit()
 

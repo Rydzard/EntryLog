@@ -98,7 +98,7 @@ const employeeContent = `
             <p>Do kedy</p>
             <input type="date" id="date_id" disabled>
 
-            <p>Prečo</p>
+            <p>DôvodDôvod</p>
             <input type="text" id="why_id" disabled>
 
             <button onclick="add_key()">Pridať kluč zamestnancovi</button>
@@ -146,7 +146,7 @@ const registrationContent = `
             <input type="date" id="date_id"> 
             <input type="time" id="time_id">
             
-            <p>Prečo</p>
+            <p>Dôvod</p>
             <select id="why_id">
                 <option value="Návšteva">Návšteva</option>
                 <option value="Pohovor">Pohovor</option>
