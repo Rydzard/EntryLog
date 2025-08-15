@@ -62,6 +62,10 @@ def load_guests():
     conn = connect_to_database("mydatabase","myuser","mypassword")
     try:
         df = pd.read_sql('SELECT id, meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM hostia ORDER BY prichod DESC;', conn)
+        # Premenovanie stĺpcov na vlastné názvy
+        df.columns = ["ID", "Meno", "Zamestnanec", "Príchod", "Odchod", "Dôvod", "Čip", "Vydal"]
+
+        # Pridať prázdny stĺpec, ak je treba
         df[""] = ""
         html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
 
@@ -79,7 +83,11 @@ def load_history():
         conn = connect_to_database("mydatabase","myuser","mypassword")
         # predpokladám, že tabulka História sa volá "historia" (malé písmená, podľa bežnej praxe)
         # Konverzia na DataFrame pre HTML tabuľku
+
+         # Premenovanie stĺpcov na vlastné názvy
+
         df = pd.read_sql('SELECT Meno, Cas, cip, vydal FROM historia ORDER BY cas DESC;', conn)
+        df.columns = [ "Meno", "Čas", "Čip", "Vydal"]
         html_table = df.to_html(escape=True, index=False, table_id="table_of_history")
         return html_table, 200
     except Exception as e:

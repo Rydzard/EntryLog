@@ -187,6 +187,9 @@ def return_keys():
         cur.execute("""DELETE FROM Kluce WHERE Meno = %s AND Kluc = %s""", (name, key))
 
         conn.commit()
+
+        add_history_keys(name,key,session['vratnik'])
+
         cur.close()
         conn.close()
 
@@ -253,17 +256,49 @@ def load_history_keys():
         cur = conn.cursor()
 
         # Načítaj všetky údaje z tabuľky Kluce
-        cur.execute("SELECT Kluc, Meno, Cas, Vydal FROM historia_kluce")
+        cur.execute("SELECT Kluc, Meno, Cas, Vydal FROM historia_kluce ORDER BY Cas DESC")
         rows = cur.fetchall()
 
         # Konverzia na DataFrame pre HTML tabuľku
         df = pd.DataFrame(rows, columns=["Klúč", "Meno", "Kedy", "Vydal"])
-        html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
+        html_table = df.to_html(escape=True, index=False, table_id="table_of_history")
 
         cur.close()
         conn.close()
 
         return html_table, 200
     
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+    
+
+def add_history_keys(name,key,vratnik):
+    try:
+        print("Voslo do historie klucov funkcii")
+        conn = connect_to_database("mydatabase","myuser","mypassword")
+        cur = conn.cursor()
+
+        print(name , key, vratnik)
+
+         # Načítaj všetky údaje z tabuľky Kluce
+        cur.execute("SELECT Kluc, Meno, Cas, Vydal FROM Kluce")
+
+        result = cur.fetchone()
+
+        if result is None:
+            print("Hosť s daným klucom nebol nájdený v databáze.")
+            return
+
+        time_for_return = datetime.now()
+        formatted_time = time_for_return.strftime("%d.%m.%Y %H:%M:%S")
+
+        cur.execute(
+            "INSERT INTO historia_kluce (Kluc, Meno, Cas, Vydal) VALUES (%s, %s, %s, %s)",
+            (key, name, formatted_time, vratnik)
+        )
+        conn.commit()
+
+        cur.close()
+        conn.close()
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
