@@ -1,39 +1,3 @@
-#table_of_guests {
-    border-collapse: collapse;
-    width: 100%;
-}
-
-#table_of_guests thead th {
-    position: sticky;
-    top: 0;
-    background-color: rgb(66, 206, 23);
-    /* alebo iná farba */
-    z-index: 2;
-}
-
-#table_of_guests tbody {
-    display: block;
-    max-height: 400px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    /* zakáže horizontálny scroll */
-}
-
-
-#table_of_guests thead,
-#table_of_guests tbody tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-}
-
-#table_of_guests td {
-  max-width: 200px; 
-  white-space: normal;
-  word-break: break-word;
-}
-
-
 body {
      background: linear-gradient(to right, #000428, #004e92);
 }
@@ -286,4 +250,39 @@ ul li:hover ul.dropdown {
 #table_of_guests button:hover {
      background-color: #00376b;
      transform: scale(1.02);
+}
+
+#table_of_guests {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#table_of_guests thead th {
+    position: sticky;
+    top: 0;
+    background-color: rgb(66, 206, 23);
+    /* alebo iná farba */
+    z-index: 2;
+}
+
+#table_of_guests tbody {
+    display: block;
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* zakáže horizontálny scroll */
+}
+
+
+#table_of_guests thead,
+#table_of_guests tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+#table_of_guests td {
+  max-width: 200px; 
+  white-space: normal;
+  word-break: break-word;
 }

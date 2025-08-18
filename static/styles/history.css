@@ -1,38 +1,3 @@
-#table_of_history {
-    border-collapse: collapse;
-    width: 100%;
-}
-
-#table_of_history thead th {
-    position: sticky;
-    top: 0;
-    background-color: rgb(66, 206, 23);
-    /* alebo iná farba */
-    z-index: 2;
-}
-
-#table_of_history tbody {
-    display: block;
-    max-height: 400px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    /* zakáže horizontálny scroll */
-}
-
-
-#table_of_history thead,
-#table_of_history tbody tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-}
-
-#table_of_history td {
-  max-width: 200px; 
-  white-space: normal;
-  word-break: break-word;
-}
-
 body {
     background: linear-gradient(to right, #000428, #004e92);
 }
@@ -199,4 +164,39 @@ ul li:hover ul.dropdown {
         padding: 8px;
         /* Menšie vnútorné okraje na mobiloch */
     }
+}
+
+#table_of_history {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#table_of_history thead th {
+    position: sticky;
+    top: 0;
+    background-color: rgb(66, 206, 23);
+    /* alebo iná farba */
+    z-index: 2;
+}
+
+#table_of_history tbody {
+    display: block;
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* zakáže horizontálny scroll */
+}
+
+
+#table_of_history thead,
+#table_of_history tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+#table_of_history td {
+  max-width: 200px; 
+  white-space: normal;
+  word-break: break-word;
 }
