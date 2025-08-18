@@ -303,3 +303,36 @@ def add_history_keys(name,key,vratnik):
         conn.close()
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+    
+
+@employee_bp.route('/api/search_employee_on_history', methods=['POST'])
+def search_employee_on_history():
+    try:
+
+        if 'vratnik' not in session:
+            return jsonify({"status": "error", "message": "Nie si prihlásený alebo session vypršala"}), 401
+        
+        data = request.get_json()
+        search_key_id = data.get('search_key_id')
+        
+
+        if not search_key_id:
+            return jsonify({"status": "error", "message": "Chýba identifikátor"}), 400
+
+        # chip_to_delete nech je rovno string, nech je to číslo alebo text
+        conn = connect_to_database("mydatabase","myuser","mypassword")
+        cur = conn.cursor()
+
+        # 1. Zmaž hosťa podľa čipu alebo textu
+        cur.execute("SELECT kluc, meno, cas, vydal FROM historia_kluce WHERE kluc = %s",(search_key_id,))
+        rows = cur.fetchall()
+
+        cur.close()
+        conn.close()
+
+        df = pd.DataFrame(rows, columns=["Klúč","Meno", "Kedy", "Vydal"])
+        html_table = df.to_html(escape=True, index=False, table_id="table_of_history")
+
+        return html_table, 200
+    except Exception as e:
+        return str(e), 500

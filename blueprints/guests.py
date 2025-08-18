@@ -241,3 +241,35 @@ def delete_guests_by_id():
         return html_table, 200
     except Exception as e:
         return str(e), 500
+    
+@guests_bp.route('/api/search_on_history', methods=['POST'])
+def search_on_history():
+    try:
+
+        if 'vratnik' not in session:
+            return jsonify({"status": "error", "message": "Nie si prihlásený alebo session vypršala"}), 401
+        
+        data = request.get_json()
+        guest_to_delete = data.get('name')
+
+
+        if not guest_to_delete:
+            return jsonify({"status": "error", "message": "Chýba identifikátor"}), 400
+
+        # chip_to_delete nech je rovno string, nech je to číslo alebo text
+        conn = connect_to_database("mydatabase","myuser","mypassword")
+        cur = conn.cursor()
+
+        # 1. Zmaž hosťa podľa čipu alebo textu
+        cur.execute("SELECT meno, cas, cip, vydal FROM historia WHERE meno ILIKE %s",(guest_to_delete + '%',))
+        rows = cur.fetchall()
+
+        cur.close()
+        conn.close()
+
+        df = pd.DataFrame(rows, columns=["Meno","Čas", "Čip", "Vydal"])
+        html_table = df.to_html(escape=True, index=False, table_id="table_of_history")
+
+        return html_table, 200
+    except Exception as e:
+        return str(e), 500

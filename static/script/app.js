@@ -125,7 +125,13 @@ const employeeContent = `
 const historyContent = `
     <div id="historyInfo" class="historyInfo">
 
-    </div>`;
+    </div>
+    <div>
+      <p>Vyhľadať návštevníka(Meno)</p>
+        <input type="text" class="styled-input" id="search_name_id">
+        <button onclick="searchHistory()">Hľadať návštevníka</button>
+    </div>
+    `;
 const keyContent = `        
           <div id="historyInfo" class="historyInfo">
 
@@ -170,7 +176,13 @@ const registrationContent = `
 const historyKeysContent = `
     <div id="historyInfo" class="historyInfo">
 
-    </div>`;
+    </div>
+    <div>
+      <p>Číslo klúču</p>
+        <input type="number" class="styled-input" id="search_key_id" min="1">
+        <button onclick="search_key_history()">Vyhľadať číslo klúču</button>
+    </div>
+    `;
 
 function login_fun() {
   //získanie údajov z formularú Login
