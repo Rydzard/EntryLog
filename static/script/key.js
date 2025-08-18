@@ -13,7 +13,7 @@ function load_keys_database() {
             const employeeKey = table.rows[i].cells[0].textContent;
             const deleteColumns = table.rows[i].cells[5]; 
             const btn = document.createElement("button");
-            btn.textContent = "Zmazať";
+            btn.innerHTML = `<img src="static/icon/bin.svg" width="20" height="20" class="icon">`;
             btn.onclick = () => deleteKey(employeeName,employeeKey);
             deleteColumns.appendChild(btn);
         }
@@ -53,7 +53,7 @@ function search_key() {
             const employeeKey = table.rows[i].cells[0].textContent;
             const deleteColumns = table.rows[i].cells[5]; 
             const btn = document.createElement("button");
-            btn.textContent = "Zmazať";
+            btn.innerHTML = `<img src="static/icon/bin.svg" width="20" height="20" class="icon">`;
             btn.onclick = () => deleteKey(employeeName,employeeKey);
             deleteColumns.appendChild(btn);
         }

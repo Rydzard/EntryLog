@@ -101,7 +101,7 @@ const employeeContent = `
             <p>Do kedy</p>
             <input type="date" id="date_id" disabled>
 
-            <p>DôvodDôvod</p>
+            <p>Dôvod</p>
             <input type="text" id="why_id" disabled>
 
             <button onclick="add_key()">Pridať kluč zamestnancovi</button>

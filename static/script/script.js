@@ -25,7 +25,7 @@ function load_guests_table() {
                 const guestChip = table.rows[i].cells[6].textContent;
                 const actionCell = table.rows[i].cells[8]; // 8. stĺpec, kde chceme tlačidlo
                 const btn = document.createElement("button");
-                btn.textContent = "Zmazať";
+                btn.innerHTML = `<img src="static/icon/bin.svg" width="20" height="20" class="icon">`;
                 btn.onclick = () => deleteGuest(guestId,guestChip);
                 actionCell.appendChild(btn);
             }
@@ -71,7 +71,7 @@ function search_guest_button() {
                 const guestChip = table.rows[i].cells[6].textContent;
                 const actionCell = table.rows[i].cells[8]; // 8. stĺpec, kde chceme tlačidlo
                 const btn = document.createElement("button");
-                btn.textContent = "Zmazať";
+                btn.innerHTML = `<img src="static/icon/bin.svg" width="20" height="20" class="icon">`;
                 btn.onclick = () => deleteGuest(guestId,guestChip);
                 actionCell.appendChild(btn);
             }

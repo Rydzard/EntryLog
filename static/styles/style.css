@@ -12,6 +12,10 @@ h1 {
     font-size: 4rem;
 }
 
+.icon {
+    color: red;  /* nastavíš farbu ikony */
+}
+
 .personInfo {
     background-color: rgb(226, 226, 226);
     margin-left: 20rem;
