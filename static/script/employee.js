@@ -41,7 +41,7 @@ function searchEmployee() {
 
             //otvorí nové okno s velkostou a nastaví subor css ktorý sa otovrí pre toto okno
             const myWindow = window.open("", "", "width=1200,height=800");
-            const cssURL = "static/styles/style.css";
+            const cssURL = "static/styles/window.css";
 
             //tu sa ešte všetko pridá css na začiatok html
             const link = myWindow.document.createElement("link");
@@ -50,9 +50,17 @@ function searchEmployee() {
             myWindow.document.head.appendChild(link);
 
             //pridanie body elementov a informacii o zamestnancovi a klúčov
-            myWindow.document.body.innerHTML = "<h1>Info zamestnanca</h1> <br> <p>Meno: " + name_json + "</p> <br> <p>Čip: " + chip_json +
-                "</p> <br> <p>Pracovisko: " + department_json + "</p> <br>" +
-                '<div id="personInfo" class="personInfo">' + data.keys_table + '</div>';
+            myWindow.document.body.innerHTML = `
+                                                <div class="employee-card">
+                                                    <h1>Info zamestnanca</h1>
+                                                    <p><strong>Meno:</strong> <span>${name_json}</span></p>
+                                                    <p><strong>Čip:</strong> <span>${chip_json}</span></p>
+                                                    <p><strong>Pracovisko:</strong> <span>${department_json}</span></p>
+                                                </div>
+                                                <div id="personInfo" class="personInfo">
+                                                    ${data.keys_table}
+                                                </div>
+                                            `;
         })
         .catch(error => {
             console.error("Chyba pri fetchnutí:", error);
