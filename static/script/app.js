@@ -126,7 +126,7 @@ const historyContent = `
     <div id="historyInfo" class="historyInfo">
 
     </div>
-    <div>
+    <div class="search-box">
       <p>Vyhľadať návštevníka(Meno)</p>
         <input type="text" class="styled-input" id="search_name_id">
         <button onclick="searchHistory()">Hľadať návštevníka</button>
@@ -177,7 +177,7 @@ const historyKeysContent = `
     <div id="historyInfo" class="historyInfo">
 
     </div>
-    <div>
+    <div class="search-box">
       <p>Číslo klúču</p>
         <input type="number" class="styled-input" id="search_key_id" min="1">
         <button onclick="search_key_history()">Vyhľadať číslo klúču</button>

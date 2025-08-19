@@ -15,7 +15,6 @@ function load_history(){
     });
 }
 
-
 function searchHistory(){
 
     var name = document.getElementById("search_name_id").value.trim();
