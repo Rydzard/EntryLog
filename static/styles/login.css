@@ -106,45 +106,68 @@ td {
      margin: 0;
      font-family: 'Poppins', monospace;
 }
-
+/* Hlavné menu */
 ul {
-     list-style: none;
-     background: #2f21ad;
+    list-style: none;
+    background: linear-gradient(90deg, #4b2fbd, #2f21ad);
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 ul li {
-     display: inline-block;
-     position: relative;
+    position: relative;
 }
 
 ul li a {
-     display: block;
-     padding: 20px 25px;
-     color: #FFF;
-     text-decoration: none;
-     text-align: center;
-     font-size: 20px;
-}
-
-ul li ul.dropdown li {
-     display: block;
-}
-
-ul li ul.dropdown {
-     width: 100%;
-     background: #8c52ff;
-     position: absolute;
-     z-index: 999;
-     display: none;
+    display: block;
+    padding: 15px 30px;
+    color: #fff;
+    text-decoration: none;
+    text-align: center;
+    font-size: 18px;
+    transition: background 0.3s ease, color 0.3s ease;
+    border-radius: 5px;
 }
 
 ul li a:hover {
-     background: #6d30e9;
+    background: linear-gradient(90deg, #6d30e9, #8c52ff);
+    color: #fff;
+}
+
+ul li ul.dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #8c52ff;
+    min-width: 200px;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 999;
+    padding: 10px 0;
+}
+
+ul li ul.dropdown li {
+    display: block;
+}
+
+ul li ul.dropdown li a {
+    padding: 10px 20px;
+    font-size: 16px;
 }
 
 ul li:hover ul.dropdown {
-     display: block;
+    display: block;
 }
+
+ul li ul.dropdown li a:hover {
+    background: #6d30e9;
+    color: #fff;
+}
+
 
 .personInfo {
      background-color: rgb(226, 226, 226);

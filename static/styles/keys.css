@@ -20,7 +20,6 @@ h1 {
 }
 
 .historyInfo {
-     background-color: rgb(226, 226, 226);
      margin-left: 20rem;
      margin-right: 20rem;
 }
@@ -72,7 +71,7 @@ td {
      /* Vnútorné okraje (padding) */
      text-align: left;
      /* Zarovnanie textu vľavo */
-     border: 1px solid #ddd;
+
      /* Svetlé šedé okraje buniek */
 }
 
@@ -86,7 +85,8 @@ tr:nth-child(even) {
 table,
 th,
 td {
-     border: 1px solid #ddd;
+
+     border: none;
      /* Svetlo šedé okraje */
      text-align: center;
 }
@@ -113,48 +113,69 @@ td {
      margin: 0;
      font-family: 'Poppins', monospace;
 }
-
+/* Hlavné menu */
 ul {
-     list-style: none;
-     background: #2f21ad;
+    list-style: none;
+    background: linear-gradient(90deg, #4b2fbd, #2f21ad);
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 ul li {
-     display: inline-block;
-     position: relative;
+    position: relative;
 }
 
 ul li a {
-     display: block;
-     padding: 20px 25px;
-     color: #FFF;
-     text-decoration: none;
-     text-align: center;
-     font-size: 20px;
-}
-
-ul li ul.dropdown li {
-     display: block;
-}
-
-ul li ul.dropdown {
-     width: 100%;
-     background: #8c52ff;
-     position: absolute;
-     z-index: 999;
-     display: none;
+    display: block;
+    padding: 15px 30px;
+    color: #fff;
+    text-decoration: none;
+    text-align: center;
+    font-size: 18px;
+    transition: background 0.3s ease, color 0.3s ease;
+    border-radius: 5px;
 }
 
 ul li a:hover {
-     background: #6d30e9;
+    background: linear-gradient(90deg, #6d30e9, #8c52ff);
+    color: #fff;
+}
+
+ul li ul.dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #8c52ff;
+    min-width: 200px;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 999;
+    padding: 10px 0;
+}
+
+ul li ul.dropdown li {
+    display: block;
+}
+
+ul li ul.dropdown li a {
+    padding: 10px 20px;
+    font-size: 16px;
 }
 
 ul li:hover ul.dropdown {
-     display: block;
+    display: block;
+}
+
+ul li ul.dropdown li a:hover {
+    background: #6d30e9;
+    color: #fff;
 }
 
 .personInfo {
-     background-color: rgb(226, 226, 226);
      margin-left: 20rem;
      margin-right: 20rem;
 }
@@ -234,45 +255,59 @@ ul li:hover ul.dropdown {
      transform: scale(1.02);
 }
 
+
+
+/* Tlačidlá v tabuľke */
 #table_of_guests button {
-     background-color: #004e92;
-     color: white;
-     border: none;
-     padding: 12px 24px;
-     border-radius: 8px;
-     font-size: 16px;
-     cursor: pointer;
-     transition: background-color 0.3s ease, transform 0.2s ease;
-     margin-top: 10px;
-     width: 100%;
+    background: linear-gradient(135deg, #0066cc 0%, #00ccff 100%);
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 #table_of_guests button:hover {
-     background-color: #00376b;
-     transform: scale(1.02);
+    transform: scale(1.05);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.6);
 }
 
+/* Štýl tabuľky */
 #table_of_guests {
     border-collapse: collapse;
     width: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
+/* Hlavička tabuľky */
 #table_of_guests thead th {
     position: sticky;
     top: 0;
-    background-color: rgb(66, 206, 23);
-    /* alebo iná farba */
+    background-color: #00376b;
+    /* tmavomodrá hlavička */
+    color: #00ffff;
+    /* tyrkysový text */
+    font-weight: 600;
+    padding: 14px 20px;
+    text-align: center; /* Zmena z left na center */
     z-index: 2;
+    border-bottom: 2px solid #00ccff;
 }
 
+/* Telo tabuľky s scrollom */
 #table_of_guests tbody {
     display: block;
     max-height: 400px;
     overflow-y: auto;
     overflow-x: hidden;
-    /* zakáže horizontálny scroll */
 }
-
 
 #table_of_guests thead,
 #table_of_guests tbody tr {
@@ -281,8 +316,89 @@ ul li:hover ul.dropdown {
     table-layout: fixed;
 }
 
+/* Riadky tabuľky */
+#table_of_guests tbody tr {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    cursor: default;
+}
+
+#table_of_guests tbody tr:nth-child(even) {
+    background-color: #001f3f;
+    /* tmavomodrý riadok */
+}
+
+#table_of_guests tbody tr:nth-child(odd) {
+    background-color: #00376b;
+    /* trochu svetlejšia modrá */
+}
+
+#table_of_guests tbody tr:hover {
+    background-color: #005f99;
+    /* svietiaca modrá pri hover */
+    transform: scale(1.01);
+}
+
+/* Bunky tabuľky */
 #table_of_guests td {
-  max-width: 200px; 
-  white-space: normal;
-  word-break: break-word;
+    padding: 12px 20px;
+    max-width: 200px;
+    white-space: normal;
+    word-break: break-word;
+    border-bottom: 1px solid #00ccff;
+    color: #ffffff;
+    /* biely text na tmavých riadkoch */
+}
+
+
+
+#table_of_guests td {
+    border-bottom: 1px solid #00ccff; /* už máš */
+}
+
+#table_of_guests tr:first-child td {
+    border-top: 1px solid #00ccff; /* horná čiara pre prvý riadok */
+}
+
+/* Scrollbar pre WebKit (Chrome, Safari, Edge) */
+#table_of_guests tbody::-webkit-scrollbar {
+    width: 12px;  /* šírka scrollu */
+}
+
+#table_of_guests tbody::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 6px;
+}
+
+#table_of_guests tbody::-webkit-scrollbar-thumb {
+    background-color: #00376b;
+    border-radius: 6px;
+    border: 3px solid #f1f1f1;
+}
+
+#table_of_guests tbody::-webkit-scrollbar-thumb:hover {
+    background-color: #00ccff;
+}
+
+/* Scrollbar pre Firefox */
+#table_of_guests tbody {
+    scrollbar-width: thin;          /* auto, thin, none */
+    scrollbar-color: #00376b #f1f1f1;  /* thumb farba, track farba */
+}
+
+#table_of_guests tbody {
+    scrollbar-width: none;           /* Firefox */
+}
+
+#table_of_guests tbody::-webkit-scrollbar {
+    display: none;                   /* Chrome, Safari, Edge */
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in-row {
+  opacity: 0;
+  animation: fadeInUp 0.5s forwards;
 }

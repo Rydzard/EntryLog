@@ -24,7 +24,7 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.register_blueprint(guests_bp)
 app.register_blueprint(employee_bp)
 
-CORS(app, supports_credentials=True)
+CORS(app, supports_credentials=True, origins=["https://127.0.0.1:5001"])
 
 @app.route('/api/login', methods=['POST'])
 def login():
@@ -37,7 +37,7 @@ def login():
         if not name or not chip:
             return jsonify({"message": "Zadaj meno aj čip"}), 400
 
-        conn = connect_to_database("mydatabase", "myuser", "mypassword")
+        conn = connect_to_database()
         cur = conn.cursor()
 
         # Hľadáme hash čipu pre dané meno

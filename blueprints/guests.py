@@ -27,7 +27,7 @@ def add_guest():
             # session neobsahuje 'vratnik'
             return jsonify({"status": "error", "message": "Nie si prihlásený alebo session vypršala"}), 401
 
-        conn = connect_to_database("mydatabase","myuser","mypassword")
+        conn = connect_to_database()
         cur = conn.cursor()
         
         cur.execute("SELECT 1 FROM Zamestnanci WHERE Meno = %s", (who,))
@@ -59,7 +59,7 @@ def add_guest():
 
 @guests_bp.route('/api/load_guests', methods=['GET'])
 def load_guests():
-    conn = connect_to_database("mydatabase","myuser","mypassword")
+    conn = connect_to_database()
     try:
         df = pd.read_sql('SELECT id, meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM hostia ORDER BY prichod DESC;', conn)
         # Premenovanie stĺpcov na vlastné názvy
@@ -80,7 +80,7 @@ def load_history():
 
     conn = None
     try:
-        conn = connect_to_database("mydatabase","myuser","mypassword")
+        conn = connect_to_database()
         # predpokladám, že tabulka História sa volá "historia" (malé písmená, podľa bežnej praxe)
         # Konverzia na DataFrame pre HTML tabuľku
 
@@ -104,7 +104,7 @@ def add_history(chip_number):
         else:
             return jsonify({"status": "error", "message": "Nie si prihlásený alebo session vypršala"}), 401
 
-        conn = connect_to_database("mydatabase","myuser","mypassword")
+        conn = connect_to_database()
         cur = conn.cursor()
         cur.execute("SELECT meno FROM hostia WHERE cip = %s", (chip_number,))
         result = cur.fetchone()
@@ -141,7 +141,7 @@ def search_guests():
 
         input_string = request.args.get('search_input')
 
-        conn = connect_to_database("mydatabase","myuser","mypassword")
+        conn = connect_to_database()
         cur = conn.cursor()
 
         cur.execute(
@@ -176,7 +176,7 @@ def delete_guests():
             return jsonify({"status": "error", "message": "Chýba identifikátor"}), 400
 
         # chip_to_delete nech je rovno string, nech je to číslo alebo text
-        conn = connect_to_database("mydatabase","myuser","mypassword")
+        conn = connect_to_database()
         cur = conn.cursor()
 
         # 1. Zmaž hosťa podľa čipu alebo textu
@@ -216,7 +216,7 @@ def delete_guests_by_id():
             return jsonify({"status": "error", "message": "Chýba identifikátor"}), 400
 
         # chip_to_delete nech je rovno string, nech je to číslo alebo text
-        conn = connect_to_database("mydatabase","myuser","mypassword")
+        conn = connect_to_database()
         cur = conn.cursor()
 
         # 1. Zmaž hosťa podľa čipu alebo textu
@@ -257,7 +257,7 @@ def search_on_history():
             return jsonify({"status": "error", "message": "Chýba identifikátor"}), 400
 
         # chip_to_delete nech je rovno string, nech je to číslo alebo text
-        conn = connect_to_database("mydatabase","myuser","mypassword")
+        conn = connect_to_database()
         cur = conn.cursor()
 
         # 1. Zmaž hosťa podľa čipu alebo textu

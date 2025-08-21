@@ -21,7 +21,7 @@ def render_employee():
         if not input_value:
             return jsonify({"status": "error", "message": "Chýbajúci vstup."}), 400
 
-        conn = connect_to_database("mydatabase", "myuser", "mypassword")
+        conn = connect_to_database()
         cur = conn.cursor()
 
         if input_value.isdigit():
@@ -62,7 +62,7 @@ def render_employee():
 
 def render_keys(name):
     try:
-        conn = connect_to_database("mydatabase","myuser","mypassword")
+        conn = connect_to_database()
         cur = conn.cursor()
 
         # Získaj kľúče priradené zamestnancovi podľa mena
@@ -108,7 +108,7 @@ def add_key():
             # session neobsahuje 'vratnik'
             return jsonify({"status": "error", "message": "Nie si prihlásený alebo session vypršala"})
         
-        conn = connect_to_database("mydatabase","myuser","mypassword")
+        conn = connect_to_database()
         cur = conn.cursor()
 
         # Over, či klúč už existuje
@@ -139,7 +139,7 @@ def add_key():
 
 
 def get_name_by_chip(chip):
-    conn = connect_to_database("mydatabase", "myuser", "mypassword")
+    conn = connect_to_database()
     cur = conn.cursor()
     
     cur.execute("SELECT meno FROM Zamestnanci WHERE cip = %s", (chip,))
@@ -171,7 +171,7 @@ def return_keys():
         if not name or name.strip() == "":
             name = get_name_by_chip(chip)
 
-        conn = connect_to_database("mydatabase","myuser","mypassword")
+        conn = connect_to_database()
         cur = conn.cursor()
 
         # Skontroluj, či záznam existuje
@@ -204,7 +204,7 @@ def return_keys():
 def load_keys_database():
     try:
 
-        conn = connect_to_database("mydatabase","myuser","mypassword")
+        conn = connect_to_database()
         cur = conn.cursor()
 
         # Načítaj všetky údaje z tabuľky Kluce
@@ -229,7 +229,7 @@ def search_key():
     try:
         key = request.args.get('key_number')
 
-        conn = connect_to_database("mydatabase","myuser","mypassword")
+        conn = connect_to_database()
         cur = conn.cursor()
 
         # Vyhľadaj kľúč v databáze
@@ -254,7 +254,7 @@ def search_key():
 def load_history_keys():
     try:
         print("Voslo do historie klucov funkcii")
-        conn = connect_to_database("mydatabase","myuser","mypassword")
+        conn = connect_to_database()
         cur = conn.cursor()
 
         # Načítaj všetky údaje z tabuľky Kluce
@@ -276,7 +276,7 @@ def load_history_keys():
 
 def add_history_keys(name,key,vratnik):
     try:
-        conn = connect_to_database("mydatabase","myuser","mypassword")
+        conn = connect_to_database()
         cur = conn.cursor()
 
         print(name , key, vratnik)
@@ -320,7 +320,7 @@ def search_employee_on_history():
             return jsonify({"status": "error", "message": "Chýba identifikátor"}), 400
 
         # chip_to_delete nech je rovno string, nech je to číslo alebo text
-        conn = connect_to_database("mydatabase","myuser","mypassword")
+        conn = connect_to_database()
         cur = conn.cursor()
 
         # 1. Zmaž hosťa podľa čipu alebo textu

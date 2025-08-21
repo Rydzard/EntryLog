@@ -5,15 +5,27 @@ function load_history(){
             alert("Nie si prihlásený alebo tvoja session vypršala.");
             throw new Error("Unauthorized");
         }
-        
-        return response.text()})
+        return response.text()
+    })
     .then(html => {
-        document.getElementById("historyInfo").innerHTML = html;
+        const container = document.getElementById("historyInfo");
+        container.innerHTML = html;
+
+        // vyberieme tabuľku v histórii (predpokladám, že má id="table_of_history")
+        const table = container.querySelector("#table_of_history");
+        if (!table) return;
+
+        // pridáme fade-in pre každý riadok
+        for (let i = 1; i < table.rows.length; i++) { // preskočíme hlavičku
+            table.rows[i].classList.add("fade-in-row");
+            table.rows[i].style.animationDelay = `${i * 0.1}s`; // postupné zobrazovanie
+        }
     })
     .catch(error => {
-        console.error("Chyba pri načítaní hostí:", error);
+        console.error("Chyba pri načítaní histórie:", error);
     });
 }
+
 
 function searchHistory(){
 
