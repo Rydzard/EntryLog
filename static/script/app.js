@@ -57,7 +57,10 @@ const login = `
                <label for="input_login_2">Čip vrátnika</label>
                <input class="styled-input" id="input_login_2" type="password" placeholder="Čip v tvare '000123567'">
 
-               <button id="search_button_id" onclick="login_fun()">Prihlásiť sa</button>
+               <button id="search_button_id" onclick="login_fun()">
+                <img src="static/icon/add.svg" width="15" height="15" class="icon"> 
+                Prihlásiť sa
+              </button>
           </div>`;
 
 
@@ -69,58 +72,97 @@ const guestsContent = `
         <br>
 
         <div>
-            <br><br>
             <div class="delete-guest-box">
-            <p>Vyhľadať návštevníka(Meno)</p><br>
-            <input class="styled-input" id="search_input_guests"> 
-            <button onclick="search_guest_button()">Hľadať návštevníka</button>
-            <br><br>
+              <h2>Vyhľadať návštevníka</h2><br>
+              <input class="styled-input" id="search_input_guests" placeholder="Meno návštevníka"> 
+              <button onclick="search_guest_button()">
+                <img src="static/icon/search.svg" width="15" height="15" class="icon"> 
+                Hľadať návštevníka
+              </button>
+            </div>
 
-              <p>Vymazať návštevníka (Čip)</p>
-              <button onclick="delete_guest_button()">Vymazať návštevníka</button>
-
+            <div class="delete-guest-box">
+              <h2>Vymazať návštevníka (Čip)</h2>
+              <br>
+              <button onclick="delete_guest_button()">
+                <img src="static/icon/bin.svg" width="15" height="15" class="icon">  
+                Vymazať návštevníka
+              </button>
             </div>
         </div>`;
 
 const employeeContent = ` 
 
-        <div>
-            <p>
-                <label>
-                    <input type="checkbox" id="special_checkbox" onchange="toggleSpecialInputs()">
-                    Špeciálne vydanie
-                </label>
-            </p>
+        <div class="search-box">
+            <h2>Pridať kľúč </h2>
+            <br>
 
             <p>Meno</p>
-            <input id="name" type="text">
+            <input id="name" type="text" placeholder="Meno zamestnanca">
 
-            <p>číslo klúču</p>
-            <input id="key" type="number">
+            <p>Číslo klúču</p>
+            <input id="key" type="number" placeholder="Zadajte čislo kľúča">
 
             <p>Do kedy</p>
             <input type="date" id="date_id" disabled>
 
             <p>Dôvod</p>
             <input type="text" id="why_id" disabled>
+            <br>
+            <br>
 
-            <button onclick="add_key()">Pridať kluč zamestnancovi</button>
+            
+            <p>
+                <label>
+                    <input type="checkbox" id="special_checkbox" onchange="toggleSpecialInputs()">
+                    Špeciálne vydanie
+                </label>
+            </p>
+            
+            <br>
+            <button onclick="add_key()">
+              <img src="static/icon/add.svg" width="15" height="15" class="icon"> 
+              Pridať kľúč zamestnancovi
+            </button>
+
         </div>
 
 
-        <div>
-            <p>Meno zamestnanca (nepovinne)</p>
-            <input id="name_id" type="text">
-            <button onclick="searchEmployee()">Hľadať zamestnanca</button>
+        <div class="search-box">
+            <h2>Vyhľadať zamestnanca</h2>
+
+            <br>
+
+            <p>Meno</p>
+            <input id="name_id" type="text" placeholder="Meno zamestnanca">
+
+            <br>
+            <br>
+
+            <button onclick="searchEmployee()">
+              <img src="static/icon/search.svg" width="15" height="15" class="icon"> 
+              Hľadať zamestnanca
+            </button>
         </div>
 
-        <div>
+        <div class="search-box">
+            <h2>Vrátiť kľúče</h2>
+            
+            <br>
+
             <p>Meno zamestnanca (nepovinne)</p>
             <input type="text" id="name_return">
-            <p>číslo klúču</p>
+            
+            <p>Číslo kľúču</p>
             <input type="number" id="key_return" min="1">
+
             <br>
-            <button onclick="return_key()">Vrátiť klúče</button>
+            <br>
+
+            <button onclick="return_key()">
+              <img src="static/icon/bin.svg" width="15" height="15" class="icon"> 
+              Vrátiť klúče
+            </button>
         </div>
        `;
 const historyContent = `
@@ -128,9 +170,12 @@ const historyContent = `
 
     </div>
     <div class="search-box">
-      <p>Vyhľadať návštevníka(Meno)</p>
-        <input type="text" class="styled-input" id="search_name_id">
-        <button onclick="searchHistory()">Hľadať návštevníka</button>
+      <h2>Vyhľadať návštevníka</h2>
+        <input type="text" class="styled-input" id="search_name_id" placeholder="Meno návštevníka">
+        <button onclick="searchHistory()">
+          <img src="static/icon/search.svg" width="15" height="15" class="icon"> 
+          Hľadať návštevníka
+        </button>
     </div>
     `;
 const keyContent = `        
@@ -139,18 +184,23 @@ const keyContent = `
           </div>
 
           <div class="find-key-box">
-            <p>Najsť klúč</p>
-            <input type="number" class="styled-input" id="search_key_id" min="1">
-            <button id="search_button_id" onclick="search_key()">Nájsť klúč</button>
+            <h2>Vyhľadať kľúč</h2>
+            <input type="number" class="styled-input" id="search_key_id" min="1" placeholder="Číslo kľúču">
+            <button id="search_button_id" onclick="search_key()">
+              <img src="static/icon/search.svg" width="15" height="15" class="icon"> 
+              Nájsť klúč
+            </button>
           </div>
 `;
 const registrationContent = ` 
          <div>
+            <h2>Registrácia mena</h2>
+
             <p>Meno</p>
-            <input id="name_id"> 
+            <input id="name_id" placeholder="Meno návštevníka"> 
 
             <p>Za kým</p>
-            <input id="who_id"> 
+            <input id="who_id" placeholder="Meno zamestnanca"> 
 
             <p>Do kedy</p>
             <input type="date" id="date_id"> 
@@ -170,7 +220,10 @@ const registrationContent = `
                 </label>
               </p>
             <br>
-            <button onclick="add_guest()">Pridať návštevníka</button>
+            <button onclick="add_guest()">
+              <img src="static/icon/add.svg" width="15" height="15" class="icon"> 
+              Pridať návštevníka
+            </button>
 
         </div>`;
 
@@ -179,9 +232,12 @@ const historyKeysContent = `
 
     </div>
     <div class="search-box">
-      <p>Číslo klúču</p>
-        <input type="number" class="styled-input" id="search_key_id" min="1">
-        <button onclick="search_key_history()">Vyhľadať číslo klúču</button>
+        <h2>Vyhľadať kľúč</h2>
+        <input type="number" class="styled-input" id="search_key_id" min="1" placeholder="Číslo kľúču">
+        <button onclick="search_key_history()">
+          <img src="static/icon/search.svg" width="15" height="15" class="icon"> 
+          Vyhľadať číslo klúču
+        </button>
     </div>
     `;
 

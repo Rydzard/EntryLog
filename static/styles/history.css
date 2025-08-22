@@ -13,8 +13,10 @@ h1 {
 }
 
 .historyInfo {
-    margin-left: 20rem;
-    margin-right: 20rem;
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
+    justify-content: center; /* stredovanie tabuľky */
 }
 
 .moreButton {
@@ -212,6 +214,11 @@ ul li ul.dropdown li a:hover {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     border-radius: 12px;
     overflow: hidden;
+}
+
+#table_of_history {
+    width: 1200px;
+    table-layout: auto;
 }
 
 /* Hlavička tabuľky */

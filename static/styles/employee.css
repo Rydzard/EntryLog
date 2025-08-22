@@ -56,6 +56,14 @@ main {
     color: #004466;
 }
 
+.search-box p {
+    font-size: 16px;
+    color: #444;
+    margin-bottom: 8px;
+    font-weight: 500;
+    text-align: left;
+}
+
 form {
     display: flex;
     flex-direction: column;
@@ -138,8 +146,6 @@ button:hover {
         /* Menšie vnútorné okraje na mobiloch */
     }
 }
-
-
 
 * {
     padding: 0;

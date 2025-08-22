@@ -1,84 +1,80 @@
 body {
-     background: linear-gradient(to right, #000428, #004e92);
+    background: linear-gradient(to right, #000428, #004e92);
 }
 
 p {
-     color: #f2f2f2;
+    color: #f2f2f2;
 }
 
 h1 {
-     color: rgb(219, 219, 219);
-     text-align: center;
-     font-size: 4rem;
+    color: rgb(219, 219, 219);
+    text-align: center;
+    font-size: 4rem;
 }
 
 .table_of_guests {
-     max-height: 30px;
-     /* alebo fixed height, napr. 300px */
-     overflow-y: auto;
-     /* pridá vertikálny scroll, ak je obsah väčší */
+    max-height: 30px;
+    /* alebo fixed height, napr. 300px */
+    overflow-y: auto;
+    /* pridá vertikálny scroll, ak je obsah väčší */
 }
 
-.historyInfo {
-     margin-left: 20rem;
-     margin-right: 20rem;
-}
 
 .moreButton {
-     font-size: 2rem;
-     margin-bottom: 1rem;
-     border: none;
-     /* Odstránené okraje */
-     background-color: rgba(241, 238, 238, 0);
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    border: none;
+    /* Odstránené okraje */
+    background-color: rgba(241, 238, 238, 0);
 }
 
 .moreButton:hover {
-     text-align: center;
-     color: #ca2929;
+    text-align: center;
+    color: #ca2929;
 }
 
 /* Celkové nastavenie tabuľky */
 table {
-     width: 100%;
-     /* Tabuľka zaberá celú šírku */
-     border-collapse: collapse;
-     /* Zbavíme sa medzier medzi bunkami */
-     margin: 20px 0;
-     /* Vzdialenosť od ostatného obsahu */
-     font-family: Arial, sans-serif;
-     /* Písmo pre tabuľku */
+    width: 100%;
+    /* Tabuľka zaberá celú šírku */
+    border-collapse: collapse;
+    /* Zbavíme sa medzier medzi bunkami */
+    margin: 20px 0;
+    /* Vzdialenosť od ostatného obsahu */
+    font-family: Arial, sans-serif;
+    /* Písmo pre tabuľku */
 }
 
 /* Hlavička tabuľky */
 th {
-     background-color: #4CAF50;
-     /* Zelené pozadie */
-     color: white;
-     /* Biely text */
-     padding: 12px 15px;
-     /* Vnútorné okraje (padding) */
-     text-align: left;
-     /* Zarovnanie textu vľavo */
-     font-size: 18px;
-     /* Veľkosť textu */
-     font-weight: bold;
-     /* Tučný text */
+    background-color: #4CAF50;
+    /* Zelené pozadie */
+    color: white;
+    /* Biely text */
+    padding: 12px 15px;
+    /* Vnútorné okraje (padding) */
+    text-align: left;
+    /* Zarovnanie textu vľavo */
+    font-size: 18px;
+    /* Veľkosť textu */
+    font-weight: bold;
+    /* Tučný text */
 }
 
 /* Riadky tabuľky */
 td {
-     padding: 12px 15px;
-     /* Vnútorné okraje (padding) */
-     text-align: left;
-     /* Zarovnanie textu vľavo */
+    padding: 12px 15px;
+    /* Vnútorné okraje (padding) */
+    text-align: left;
+    /* Zarovnanie textu vľavo */
 
-     /* Svetlé šedé okraje buniek */
+    /* Svetlé šedé okraje buniek */
 }
 
 /* Striedanie farieb riadkov */
 tr:nth-child(even) {
-     background-color: #f2f2f2;
-     /* Svetlo šedá farba pre párne riadky */
+    background-color: #f2f2f2;
+    /* Svetlo šedá farba pre párne riadky */
 }
 
 /* Okraje okolo celej tabuľky */
@@ -86,33 +82,34 @@ table,
 th,
 td {
 
-     border: none;
-     /* Svetlo šedé okraje */
-     text-align: center;
+    border: none;
+    /* Svetlo šedé okraje */
+    text-align: center;
 }
 
 
 /* Prispôsobenie pre mobilné zariadenia */
 @media screen and (max-width: 600px) {
-     table {
-          width: 100%;
-          /* Tabuľka zaberá celú šírku pri malých obrazovkách */
-     }
+    table {
+        width: 100%;
+        /* Tabuľka zaberá celú šírku pri malých obrazovkách */
+    }
 
-     th,
-     td {
-          padding: 8px;
-          /* Menšie vnútorné okraje na mobiloch */
-     }
+    th,
+    td {
+        padding: 8px;
+        /* Menšie vnútorné okraje na mobiloch */
+    }
 }
 
 
 
 * {
-     padding: 0;
-     margin: 0;
-     font-family: 'Poppins', monospace;
+    padding: 0;
+    margin: 0;
+    font-family: 'Poppins', monospace;
 }
+
 /* Hlavné menu */
 ul {
     list-style: none;
@@ -152,7 +149,7 @@ ul li ul.dropdown {
     background: #8c52ff;
     min-width: 200px;
     border-radius: 5px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     z-index: 999;
     padding: 10px 0;
 }
@@ -175,84 +172,86 @@ ul li ul.dropdown li a:hover {
     color: #fff;
 }
 
-.personInfo {
-     margin-left: 20rem;
-     margin-right: 20rem;
+.historyInfo {
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
+    justify-content: center; /* stredovanie tabuľky */
 }
 
 /* Prispôsobenie pre mobilné zariadenia */
 @media screen and (max-width: 600px) {
-     table {
-          width: 100%;
-          /* Tabuľka zaberá celú šírku pri malých obrazovkách */
-     }
+    table {
+        width: 100%;
+        /* Tabuľka zaberá celú šírku pri malých obrazovkách */
+    }
 
-     th,
-     td {
-          padding: 8px;
-          /* Menšie vnútorné okraje na mobiloch */
-     }
+    th,
+    td {
+        padding: 8px;
+        /* Menšie vnútorné okraje na mobiloch */
+    }
 }
 
 
 .find-key-box {
-     background-color: rgba(255, 255, 255, 0.95);
-     padding: 40px 35px;
-     border-radius: 16px;
-     max-width: 400px;
-     margin: 60px auto;
-     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-     text-align: center;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 40px 35px;
+    border-radius: 16px;
+    max-width: 400px;
+    margin: 60px auto;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
 }
 
 .find-key-box h2 {
-     font-size: 28px;
-     margin-bottom: 25px;
-     color: #002244;
+    font-size: 28px;
+    margin-bottom: 25px;
+    color: #002244;
 }
 
 .find-key-box p {
-     font-size: 16px;
-     color: #444;
-     margin-bottom: 8px;
-     font-weight: 500;
-     text-align: left;
+    font-size: 16px;
+    color: #444;
+    margin-bottom: 8px;
+    font-weight: 500;
+    text-align: left;
 }
 
 .styled-input {
-     padding: 12px 14px;
-     font-size: 15px;
-     border: 1px solid #ccc;
-     border-radius: 8px;
-     width: 100%;
-     margin-bottom: 20px;
-     box-sizing: border-box;
-     transition: border 0.3s ease, box-shadow 0.3s ease;
+    padding: 12px 14px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 100%;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
 }
 
 .styled-input:focus {
-     border-color: #004e92;
-     box-shadow: 0 0 6px rgba(0, 78, 146, 0.3);
-     outline: none;
+    border-color: #004e92;
+    box-shadow: 0 0 6px rgba(0, 78, 146, 0.3);
+    outline: none;
 }
 
 .find-key-box button {
-     background-color: #004e92;
-     color: white;
-     border: none;
-     padding: 12px 24px;
-     border-radius: 8px;
-     font-size: 16px;
-     cursor: pointer;
-     transition: background-color 0.3s ease, transform 0.2s ease;
-     margin-top: 10px;
-     width: 100%;
+    background-color: #004e92;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+    width: 100%;
 }
 
 .find-key-box button:hover {
-     background-color: #00376b;
-     transform: scale(1.02);
+    background-color: #00376b;
+    transform: scale(1.02);
 }
 
 
@@ -286,6 +285,11 @@ ul li ul.dropdown li a:hover {
     overflow: hidden;
 }
 
+#table_of_guests {
+    width: 1200px;
+    table-layout: auto;
+}
+
 /* Hlavička tabuľky */
 #table_of_guests thead th {
     position: sticky;
@@ -296,7 +300,8 @@ ul li ul.dropdown li a:hover {
     /* tyrkysový text */
     font-weight: 600;
     padding: 14px 20px;
-    text-align: center; /* Zmena z left na center */
+    text-align: center;
+    /* Zmena z left na center */
     z-index: 2;
     border-bottom: 2px solid #00ccff;
 }
@@ -340,7 +345,7 @@ ul li ul.dropdown li a:hover {
 
 /* Bunky tabuľky */
 #table_of_guests td {
-    padding: 12px 20px;
+    padding: 10px 10px;
     max-width: 200px;
     white-space: normal;
     word-break: break-word;
@@ -350,18 +355,20 @@ ul li ul.dropdown li a:hover {
 }
 
 
-
 #table_of_guests td {
-    border-bottom: 1px solid #00ccff; /* už máš */
+    border-bottom: 1px solid #00ccff;
+    /* už máš */
 }
 
 #table_of_guests tr:first-child td {
-    border-top: 1px solid #00ccff; /* horná čiara pre prvý riadok */
+    border-top: 1px solid #00ccff;
+    /* horná čiara pre prvý riadok */
 }
 
 /* Scrollbar pre WebKit (Chrome, Safari, Edge) */
 #table_of_guests tbody::-webkit-scrollbar {
-    width: 12px;  /* šírka scrollu */
+    width: 12px;
+    /* šírka scrollu */
 }
 
 #table_of_guests tbody::-webkit-scrollbar-track {
@@ -381,24 +388,27 @@ ul li ul.dropdown li a:hover {
 
 /* Scrollbar pre Firefox */
 #table_of_guests tbody {
-    scrollbar-width: thin;          /* auto, thin, none */
-    scrollbar-color: #00376b #f1f1f1;  /* thumb farba, track farba */
+    scrollbar-width: thin;
+    /* auto, thin, none */
+    scrollbar-color: #00376b #f1f1f1;
+    /* thumb farba, track farba */
 }
 
-#table_of_guests tbody {
-    scrollbar-width: none;           /* Firefox */
-}
 
-#table_of_guests tbody::-webkit-scrollbar {
-    display: none;                   /* Chrome, Safari, Edge */
-}
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .fade-in-row {
-  opacity: 0;
-  animation: fadeInUp 0.5s forwards;
+    opacity: 0;
+    animation: fadeInUp 0.5s forwards;
 }

@@ -13,8 +13,10 @@ h1 {
 }
 
 .personInfo {
-    margin-left: 20rem;
-    margin-right: 20rem;
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
+    justify-content: center; /* stredovanie tabuľky */
 }
 
 .moreButton {
@@ -64,7 +66,7 @@ td {
     /* Vnútorné okraje (padding) */
     text-align: left;
     /* Zarovnanie textu vľavo */
-    border: 1px solid ;
+    border: 1px solid;
     /* Svetlé šedé okraje buniek */
 }
 
@@ -145,7 +147,7 @@ ul li ul.dropdown {
     background: #8c52ff;
     min-width: 200px;
     border-radius: 5px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     z-index: 999;
     padding: 10px 0;
 }
@@ -181,10 +183,11 @@ ul li ul.dropdown li a:hover {
 }
 
 .delete-guest-box p {
-    font-size: 18px;
-    color: #333;
-    margin-bottom: 12px;
+    font-size: 16px;
+    color: #444;
+    margin-bottom: 8px;
     font-weight: 500;
+    text-align: left;
 }
 
 .styled-input {
@@ -249,6 +252,11 @@ ul li ul.dropdown li a:hover {
     overflow: hidden;
 }
 
+#table_of_guests {
+    width: 1200px;
+    table-layout: auto;
+}
+
 /* Hlavička tabuľky */
 #table_of_guests thead th {
     position: sticky;
@@ -259,7 +267,8 @@ ul li ul.dropdown li a:hover {
     /* tyrkysový text */
     font-weight: 600;
     padding: 14px 20px;
-    text-align: center; /* Zmena z left na center */
+    text-align: center;
+    /* Zmena z left na center */
     z-index: 2;
     border-bottom: 2px solid #00ccff;
 }
@@ -303,8 +312,8 @@ ul li ul.dropdown li a:hover {
 
 /* Bunky tabuľky */
 #table_of_guests td {
-    padding: 12px 20px;
-    max-width: 200px;
+    padding: 10px 10px;
+    max-width: 300px;
     white-space: normal;
     word-break: break-word;
     border-bottom: 1px solid #00ccff;
@@ -312,19 +321,20 @@ ul li ul.dropdown li a:hover {
     /* biely text na tmavých riadkoch */
 }
 
-
-
 #table_of_guests td {
-    border-bottom: 1px solid #00ccff; /* už máš */
+    border-bottom: 1px solid #00ccff;
+    /* už máš */
 }
 
 #table_of_guests tr:first-child td {
-    border-top: 1px solid #00ccff; /* horná čiara pre prvý riadok */
+    border-top: 1px solid #00ccff;
+    /* horná čiara pre prvý riadok */
 }
 
 /* Scrollbar pre WebKit (Chrome, Safari, Edge) */
 #table_of_guests tbody::-webkit-scrollbar {
-    width: 12px;  /* šírka scrollu */
+    width: 12px;
+    /* šírka scrollu */
 }
 
 #table_of_guests tbody::-webkit-scrollbar-track {
@@ -344,27 +354,38 @@ ul li ul.dropdown li a:hover {
 
 /* Scrollbar pre Firefox */
 #table_of_guests tbody {
-    scrollbar-width: thin;          /* auto, thin, none */
-    scrollbar-color: #00376b #f1f1f1;  /* thumb farba, track farba */
+    scrollbar-width: thin;
+    /* auto, thin, none */
+    scrollbar-color: #00376b #f1f1f1;
+    /* thumb farba, track farba */
 }
 
 
 
 #table_of_guests tbody {
-    scrollbar-width: none;           /* Firefox */
+    scrollbar-width: none;
+    /* Firefox */
 }
 
 #table_of_guests tbody::-webkit-scrollbar {
-    display: none;                   /* Chrome, Safari, Edge */
+    display: none;
+    /* Chrome, Safari, Edge */
 }
 
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .fade-in-row {
-  opacity: 0;
-  animation: fadeInUp 0.5s forwards;
+    opacity: 0;
+    animation: fadeInUp 0.5s forwards;
 }

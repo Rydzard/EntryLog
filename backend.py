@@ -24,7 +24,7 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.register_blueprint(guests_bp)
 app.register_blueprint(employee_bp)
 
-CORS(app, supports_credentials=True, origins=["https://127.0.0.1:5001"])
+CORS(app, supports_credentials=True, origins=["https://192.168.51.41:5001"])
 
 @app.route('/api/login', methods=['POST'])
 def login():
