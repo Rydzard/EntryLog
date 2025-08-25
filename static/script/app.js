@@ -1,3 +1,5 @@
+const BASE_URL = "https://localhost:5001/api";
+
 const app = document.getElementById('app');
 
 const styleLink = document.getElementById('page-style');
@@ -188,7 +190,7 @@ const keyContent = `
             <input type="number" class="styled-input" id="search_key_id" min="1" placeholder="Číslo kľúču">
             <button id="search_button_id" onclick="search_key()">
               <img src="static/icon/search.svg" width="15" height="15" class="icon"> 
-              Nájsť klúč
+              Vyhľadať číslo klúču
             </button>
           </div>
 `;
@@ -253,7 +255,7 @@ function login_fun() {
   }
 
   //fetch request na server, ktorý vráti odpoveď o zalogovaní
-  fetch('https://localhost:5000/api/login', {
+  fetch(`${BASE_URL}/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
@@ -289,7 +291,7 @@ document.querySelectorAll('a').forEach(link => {
 function logout(event) {
   event.preventDefault(); // Zastaví reload stránky
 
-  fetch('https://localhost:5000/api/logout')
+  fetch(`${BASE_URL}/logout`)
     .then(response => {
       if (!response.ok) throw new Error("Network response was not ok");
       // Nepotrebujeme parsovať JSON, stačí úspešná odpoveď

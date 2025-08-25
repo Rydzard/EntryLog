@@ -1,12 +1,13 @@
 function load_guests_table() {
-    fetch('https://localhost:5000/api/load_guests')
+    fetch(`${BASE_URL}/load_guests`)
         .then(response => {
             if (response.status === 401) {
                 alert("Nie si prihlásený alebo tvoja session vypršala.");
                 throw new Error("Unauthorized");
             }
 
-            return response.text()})
+            return response.text()
+        })
         .then(html => {
             const container = document.getElementById("personInfo");
             container.innerHTML = html;
@@ -26,10 +27,10 @@ function load_guests_table() {
                 const actionCell = table.rows[i].cells[8]; // 8. stĺpec, kde chceme tlačidlo
                 const btn = document.createElement("button");
                 btn.innerHTML = `<img src="static/icon/bin.svg" width="20" height="20" class="icon">`;
-                btn.onclick = () => deleteGuest(guestId,guestChip);
+                btn.onclick = () => deleteGuest(guestId, guestChip);
                 actionCell.appendChild(btn);
 
-                 // Pridáme fade-in animáciu
+                // Pridáme fade-in animáciu
                 table.rows[i].classList.add("fade-in-row");
                 table.rows[i].style.animationDelay = `${i * 0.1}s`; // postupné zobrazovanie riadkov
             }
@@ -37,15 +38,18 @@ function load_guests_table() {
         .catch(error => console.error("Chyba pri načítaní hostí:", error));
 }
 
+
+
 function reload_guests_table() {
-    fetch('https://localhost:5000/api/load_guests')
+    fetch(`${BASE_URL}/load_guests`)
         .then(response => {
             if (response.status === 401) {
                 alert("Nie si prihlásený alebo tvoja session vypršala.");
                 throw new Error("Unauthorized");
             }
 
-            return response.text()})
+            return response.text()
+        })
         .then(html => {
             const container = document.getElementById("personInfo");
             container.innerHTML = html;
@@ -65,7 +69,7 @@ function reload_guests_table() {
                 const actionCell = table.rows[i].cells[8]; // 8. stĺpec, kde chceme tlačidlo
                 const btn = document.createElement("button");
                 btn.innerHTML = `<img src="static/icon/bin.svg" width="20" height="20" class="icon">`;
-                btn.onclick = () => deleteGuest(guestId,guestChip);
+                btn.onclick = () => deleteGuest(guestId, guestChip);
                 actionCell.appendChild(btn);
             }
         })
@@ -81,7 +85,7 @@ function search_guest_button() {
         return
     }
 
-    fetch(`https://localhost:5000/api/search_guests?search_input=${encodeURIComponent(search_input)}`, {
+    fetch(`${BASE_URL}/search_guests?search_input=${encodeURIComponent(search_input)}`, {
         method: 'GET',
         credentials: 'include'
     })
@@ -111,7 +115,7 @@ function search_guest_button() {
                 const actionCell = table.rows[i].cells[8]; // 8. stĺpec, kde chceme tlačidlo
                 const btn = document.createElement("button");
                 btn.innerHTML = `<img src="static/icon/bin.svg" width="20" height="20" class="icon">`;
-                btn.onclick = () => deleteGuest(guestId,guestChip);
+                btn.onclick = () => deleteGuest(guestId, guestChip);
                 actionCell.appendChild(btn);
             }
         })
@@ -131,41 +135,41 @@ function delete_guest_button() {
         return
     }
 
-    fetch('https://localhost:5000/api/delete_guests', {
+    fetch(`${BASE_URL}/delete_guests`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ delete_input })  // Kratšia verzia zápisu (ES6)
     })
-    .then(response => {
+        .then(response => {
             if (response.status === 401) {
                 alert("Nie si prihlásený alebo tvoja session vypršala.");
                 throw new Error("Unauthorized");
             }
             return response.text();
-    })
-    .then(html => {
-        reload_guests_table();
-    })
-    .catch(console.error)
+        })
+        .then(html => {
+            reload_guests_table();
+        })
+        .catch(console.error)
 }
 
 function deleteGuest(delete_id, delete_chip) {
-    fetch('https://localhost:5000/api/delete_guests_by_id', {
+    fetch(`${BASE_URL}/delete_guests_by_id`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ delete_id, delete_chip })
     })
-    .then(response => {
-        if (response.status === 401) {
-            alert("Nie si prihlásený alebo tvoja session vypršala.");
-            throw new Error("Unauthorized");
-        }
-        return response.text();
-    })
-    .then(html => {
-        reload_guests_table();
-    })
-    .catch(console.error);
+        .then(response => {
+            if (response.status === 401) {
+                alert("Nie si prihlásený alebo tvoja session vypršala.");
+                throw new Error("Unauthorized");
+            }
+            return response.text();
+        })
+        .then(html => {
+            reload_guests_table();
+        })
+        .catch(console.error);
 }

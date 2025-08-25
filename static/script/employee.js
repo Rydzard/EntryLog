@@ -1,3 +1,4 @@
+
 function searchEmployee() {
     //načíta vstup
     var input_string = document.getElementById("name_id").value.trim();
@@ -15,7 +16,7 @@ function searchEmployee() {
     }
 
     //url kde sa bude posielat sprava na api
-    const url = `https://localhost:5000/api/render_employee?search_input=${encodeURIComponent(input_string)}`;
+    const url = `${BASE_URL}/render_employee?search_input=${encodeURIComponent(input_string)}`;
 
     fetch(url, {
         method: 'GET',
@@ -108,7 +109,7 @@ function add_key() {
         formattedDate = "Nepriradené"
     }
 
-    fetch('https://localhost:5000/api/add_key', {
+    fetch(`${BASE_URL}/add_key`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -127,6 +128,17 @@ function return_key() {
     var key = document.getElementById('key_return').value;
     var chip;
 
+    if (!key) {
+        alert("Treba vyplniť celý dotazník (aspoň kľúč)");
+        return;
+    }
+
+    if (key <= 0) {
+        alert("Ste zadali záporné čislo klúča");
+        return;
+    }
+
+
     if (!name) {
         chip = prompt("Zadajte čip zamestnanca ");
 
@@ -137,18 +149,7 @@ function return_key() {
         }
     }
 
-
-    if (!key) {
-        alert("Treba vyplniť celý dotazník");
-        return;
-    }
-
-    if (key <= 0) {
-        alert("Ste zadali záporné čislo klúča");
-        return;
-    }
-
-    fetch('https://localhost:5000/api/return_keys', {
+    fetch(`${BASE_URL}/return_keys`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
