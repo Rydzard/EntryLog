@@ -197,7 +197,9 @@ const keyContent = `
 `;
 const registrationContent = ` 
          <div>
-            <h2>Registrácia mena</h2>
+            <h2>Registrácia návštev</h2>
+
+            <br>
 
             <p>Meno</p>
             <input id="name_id" placeholder="Meno návštevníka"> 

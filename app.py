@@ -7,6 +7,7 @@ from blueprints.employee import employee_bp
 
 from werkzeug.security import check_password_hash
 import secrets
+from blueprints.init import init_db
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)  # musí byť nastavený, inak session nebude fungovať
@@ -75,4 +76,6 @@ def home():
     return render_template('app.html')
 
 if __name__ == "__main__":
+
+    init_db()
     app.run(ssl_context=('certifikat/localhost+2.pem', 'certifikat/localhost+2-key.pem'), port=5001, host='localhost')

@@ -6,6 +6,8 @@ from psycopg2 import sql
 import pandas as pd
 from datetime import datetime
 
+
+
 guests_bp = Blueprint('guests', __name__)
 
 @guests_bp.route('/api/add_guest', methods=['POST'])
@@ -80,13 +82,10 @@ def load_history():
     conn = None
     try:
         conn = connect_to_database()
-        # predpokladám, že tabulka História sa volá "historia" (malé písmená, podľa bežnej praxe)
-        # Konverzia na DataFrame pre HTML tabuľku
 
-         # Premenovanie stĺpcov na vlastné názvy
 
-        df = pd.read_sql('SELECT Meno, Cas, cip, vydal FROM historia ORDER BY cas DESC;', conn)
-        df.columns = [ "Meno", "Odchod", "Čip", "Vydal"]
+        df = pd.read_sql('SELECT Meno, Prichod, Odchod, cip, vydal FROM historia ORDER BY Odchod DESC;', conn)
+        df.columns = [ "Meno","Príchod","Odchod", "Čip", "Vydal"]
         html_table = df.to_html(escape=True, index=False, table_id="table_of_history")
         return html_table, 200
     except Exception as e:
@@ -105,7 +104,9 @@ def add_history(chip_number):
 
         conn = connect_to_database()
         cur = conn.cursor()
-        cur.execute("SELECT meno FROM hostia WHERE cip = %s", (chip_number,))
+
+         # Získa meno a čas príchodu hosťa podľa čipu
+        cur.execute("SELECT meno, prichod FROM hostia WHERE cip = %s", (chip_number,))
         result = cur.fetchone()
 
         if result is None:
@@ -113,12 +114,14 @@ def add_history(chip_number):
             return
 
         guest_name = result[0]
+        guest_came_in = result[1]
+
         time_for_return = datetime.now()
-        formatted_time = time_for_return.strftime("%d.%m.%Y %H:%M:%S")
+        formatted_time = time_for_return.strftime("%d.%m.%Y %H:%M")
 
         cur.execute(
-            "INSERT INTO historia (meno, cas, cip, vydal) VALUES (%s, %s, %s, %s)",
-            (guest_name, formatted_time, chip_number, vratnik)
+            "INSERT INTO historia (meno, prichod ,odchod, cip, vydal) VALUES (%s, %s, %s, %s, %s)",
+            (guest_name, guest_came_in ,formatted_time, chip_number, vratnik)
         )
         conn.commit()
 
@@ -144,7 +147,7 @@ def search_guests():
         cur = conn.cursor()
 
         cur.execute(
-            "SELECT id, meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM Hostia WHERE meno ILIKE %s",
+            "SELECT id, meno, zamestnanec, prichod, preco, cip, vydal FROM Hostia WHERE meno ILIKE %s",
             (input_string + '%',)
         )
         rows = cur.fetchall()
