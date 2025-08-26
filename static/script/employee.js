@@ -41,7 +41,7 @@ function searchEmployee() {
             var department_json = data.department;
 
             //otvorí nové okno s velkostou a nastaví subor css ktorý sa otovrí pre toto okno
-            const myWindow = window.open("", "", "width=1200,height=800");
+            const myWindow = window.open("", "", "width=1400,height=700");
             const cssURL = "static/styles/window.css";
 
             //tu sa ešte všetko pridá css na začiatok html
@@ -102,6 +102,11 @@ function add_key() {
     //ak zadá ručne zaporné čislo do inputu tak vyhodi alert a vráti return
     if (key <= 0) {
         alert("Ste zadali záporné čislo klúča");
+        return;
+    }
+
+    if(isChecked && !date && !why && !time){
+        alert("Ste zadali nepriradené dátum,čas alebo prečo");
         return;
     }
 

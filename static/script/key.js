@@ -12,7 +12,7 @@ function load_keys_database() {
             for (let i = 1; i < table.rows.length; i++) { // začína od 1, preskočí hlavičku
                 const employeeName = table.rows[i].cells[1].textContent; // ID stále vieme z prvého stĺpca
                 const employeeKey = table.rows[i].cells[0].textContent;
-                const deleteColumns = table.rows[i].cells[5];
+                const deleteColumns = table.rows[i].cells[6];
                 const btn = document.createElement("button");
                 btn.innerHTML = `<img src="static/icon/bin.svg" width="20" height="20" class="icon">`;
                 btn.onclick = () => deleteKey(employeeName, employeeKey);
@@ -42,7 +42,7 @@ function reload_keys_database() {
             for (let i = 1; i < table.rows.length; i++) { // začína od 1, preskočí hlavičku
                 const employeeName = table.rows[i].cells[1].textContent; // ID stále vieme z prvého stĺpca
                 const employeeKey = table.rows[i].cells[0].textContent;
-                const deleteColumns = table.rows[i].cells[5];
+                const deleteColumns = table.rows[i].cells[6];
                 const btn = document.createElement("button");
                 btn.innerHTML = `<img src="static/icon/bin.svg" width="20" height="20" class="icon">`;
                 btn.onclick = () => deleteKey(employeeName, employeeKey);

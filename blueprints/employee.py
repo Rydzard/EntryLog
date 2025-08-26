@@ -66,7 +66,7 @@ def render_keys(name):
         cur = conn.cursor()
 
         # Získaj kľúče priradené zamestnancovi podľa mena
-        cur.execute("SELECT kluc, preco, cas, vydal FROM kluce WHERE meno = %s", (name,))
+        cur.execute("SELECT kluc, prichod, preco, cas, vydal FROM kluce WHERE meno = %s", (name,))
         rows = cur.fetchall()
         colnames = [desc[0] for desc in cur.description]
 
@@ -82,7 +82,7 @@ def render_keys(name):
             df = df.drop(columns=['name'])
 
                 # Konverzia na DataFrame pre HTML tabuľku
-        df = pd.DataFrame(rows, columns=["Klúč","Prečo", "Čas", "Vydal"])
+        df = pd.DataFrame(rows, columns=["Klúč","Príchod","Prečo", "Do kedy", "Vydal"])
         html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
         return html_table
 
@@ -100,6 +100,9 @@ def add_key():
         date = data.get('date_id')
         why = data.get('why_id')
         
+
+        time_enter = datetime.now()
+        formatted_time = time_enter.strftime("%d.%m.%Y %H:%M")
 
         if 'vratnik' in session:
             # session obsahuje kľúč 'vratnik'
@@ -123,8 +126,8 @@ def add_key():
         
         # Vlož nový záznam
         cur.execute(
-            "INSERT INTO Kluce (Kluc, Meno, Preco, Cas, vydal) VALUES (%s, %s, %s, %s, %s)",
-            (key, name, why, date,vratnik)
+            "INSERT INTO Kluce (Kluc, Meno, Prichod ,Preco, Cas, vydal) VALUES (%s, %s, %s, %s, %s, %s)",
+            (key, name, formatted_time, why, date,vratnik)
         )
 
         conn.commit()
@@ -178,6 +181,8 @@ def return_keys():
         cur.execute("""SELECT * FROM Kluce WHERE Meno = %s AND Kluc = %s""", (name, key))
         match = cur.fetchone()
 
+        prichod = match[6]
+
         if not match:
             cur.close()
             conn.close()
@@ -188,7 +193,7 @@ def return_keys():
 
         conn.commit()
 
-        add_history_keys(name,key,session['vratnik'])
+        add_history_keys(name,key,prichod,session['vratnik'])
 
         cur.close()
         conn.close()
@@ -208,11 +213,11 @@ def load_keys_database():
         cur = conn.cursor()
 
         # Načítaj všetky údaje z tabuľky Kluce
-        cur.execute("SELECT Kluc, Meno, Preco, Cas, vydal FROM Kluce ORDER BY Cas ASC")
+        cur.execute("SELECT Kluc, Meno, Prichod, Preco, Cas, vydal FROM Kluce ORDER BY Cas ASC")
         rows = cur.fetchall()
 
         # Konverzia na DataFrame pre HTML tabuľku
-        df = pd.DataFrame(rows, columns=["Klúč", "Meno", "Prečo", "Kedy", "Vydal"])
+        df = pd.DataFrame(rows, columns=["Klúč", "Meno","Príchod", "Prečo", "Do kedy", "Vydal"])
         df[""] = ""
         html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
 
@@ -233,11 +238,11 @@ def search_key():
         cur = conn.cursor()
 
         # Vyhľadaj kľúč v databáze
-        cur.execute("SELECT Kluc, Meno, Preco,Cas, vydal FROM Kluce WHERE Kluc = %s",(key,))
+        cur.execute("SELECT Kluc, Meno, Prichod, Preco, Cas, vydal FROM Kluce WHERE Kluc = %s",(key,))
         rows = cur.fetchall()
 
         # Premena na HTML tabuľku
-        df = pd.DataFrame(rows, columns=["Klúč", "Meno", "Prečo", "Kedy","Vydal"])
+        df = pd.DataFrame(rows, columns=["Klúč", "Meno", "Príchod", "Prečo", "Kedy","Vydal"])
         df[""] = ""
         html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
 
@@ -258,11 +263,11 @@ def load_history_keys():
         cur = conn.cursor()
 
         # Načítaj všetky údaje z tabuľky Kluce
-        cur.execute("SELECT Kluc, Meno, Cas, Vydal FROM historia_kluce ORDER BY Cas DESC")
+        cur.execute("SELECT Kluc, Meno, Prichod, Cas, Vydal FROM historia_kluce ORDER BY Cas DESC")
         rows = cur.fetchall()
 
         # Konverzia na DataFrame pre HTML tabuľku
-        df = pd.DataFrame(rows, columns=["Klúč", "Meno", "Kedy", "Odovzdal"])
+        df = pd.DataFrame(rows, columns=["Klúč", "Meno","Prichod", "Vrátil", "Vratnik"])
         html_table = df.to_html(escape=True, index=False, table_id="table_of_history")
 
         cur.close()
@@ -274,22 +279,20 @@ def load_history_keys():
         return jsonify({"status": "error", "message": str(e)}), 500
     
 
-def add_history_keys(name, key, vratnik):
+def add_history_keys(name, key,prichod, vratnik):
     conn = None
     cur = None
     try:
         conn = connect_to_database()
         cur = conn.cursor()
 
-        print(name, key, vratnik)
-
         time_for_return = datetime.now()
-        formatted_time = time_for_return.strftime("%d.%m.%Y %H:%M:%S")
+        formatted_time = time_for_return.strftime("%d.%m.%Y %H:%M")
 
         # Pridaj záznam do histórie
         cur.execute(
-            "INSERT INTO historia_kluce (Kluc, Meno, Cas, Vydal) VALUES (%s, %s, %s, %s)",
-            (key, name, formatted_time, vratnik)
+            "INSERT INTO historia_kluce (Kluc, Meno, Prichod, Cas, Vydal) VALUES (%s, %s ,%s, %s, %s)",
+            (key, name,prichod,formatted_time, vratnik)
         )
         conn.commit()
 
@@ -325,13 +328,13 @@ def search_employee_on_history():
         cur = conn.cursor()
 
         # 1. Zmaž hosťa podľa čipu alebo textu
-        cur.execute("SELECT kluc, meno, cas, vydal FROM historia_kluce WHERE kluc = %s",(search_key_id,))
+        cur.execute("SELECT kluc, meno, prichod, cas, vydal FROM historia_kluce WHERE kluc = %s",(search_key_id,))
         rows = cur.fetchall()
 
         cur.close()
         conn.close()
 
-        df = pd.DataFrame(rows, columns=["Klúč","Meno", "Kedy", "Vydal"])
+        df = pd.DataFrame(rows, columns=["Klúč","Meno","Prichod","Kedy", "Vydal"])
         html_table = df.to_html(escape=True, index=False, table_id="table_of_history")
 
         return html_table, 200

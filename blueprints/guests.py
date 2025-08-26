@@ -62,7 +62,7 @@ def add_guest():
 def load_guests():
     conn = connect_to_database()
     try:
-        df = pd.read_sql('SELECT id, meno, zamestnanec, prichod, preco, cip, vydal FROM hostia ORDER BY id DESC;', conn)
+        df = pd.read_sql('SELECT id, meno, zamestnanec, prichod, preco, cip, vydal FROM hostia ORDER BY prichod DESC;', conn)
         # Premenovanie stĺpcov na vlastné názvy
         df.columns = ["ID", "Meno", "Zamestnanec", "Príchod", "Dôvod", "Čip", "Vydal"]
 
@@ -266,13 +266,13 @@ def search_on_history():
         cur = conn.cursor()
 
         # 1. Zmaž hosťa podľa čipu alebo textu
-        cur.execute("SELECT meno, cas, cip, vydal FROM historia WHERE meno ILIKE %s",(guest_to_delete + '%',))
+        cur.execute("SELECT meno, prichod, odchod, cip, vydal FROM historia WHERE meno ILIKE %s",(guest_to_delete + '%',))
         rows = cur.fetchall()
 
         cur.close()
         conn.close()
 
-        df = pd.DataFrame(rows, columns=["Meno","Čas", "Čip", "Vydal"])
+        df = pd.DataFrame(rows, columns=["Meno", "Príchod", "Odchod", "Čip", "Vratnik"])
         html_table = df.to_html(escape=True, index=False, table_id="table_of_history")
 
         return html_table, 200
