@@ -74,6 +74,7 @@ function toggleSpecialInputs() {
     const isChecked = document.getElementById('special_checkbox').checked;
     document.getElementById('date_id').disabled = !isChecked;
     document.getElementById('why_id').disabled = !isChecked;
+    document.getElementById('time_id').disabled = !isChecked;
 }
 
 
@@ -84,13 +85,14 @@ function add_key() {
     var name = document.getElementById('name').value;
     var key = document.getElementById('key').value;
     var date = document.getElementById('date_id').value;
+    var time = document.getElementById('time_id').value;
     var why = document.getElementById('why_id').value;
     const isChecked = document.getElementById('special_checkbox').checked;
 
     //spracovanie dátumu
     var parts = date.split('-');
     var formattedDate = parts[2] + '.' + parts[1] + '.' + parts[0];
-
+    formattedDate = formattedDate + ' ' + time;
     //ak nezadal vstupy tak vyhodi alert a vráti return
     if (!name || !key) {
         alert("Treba vyplniť celý dotazník");

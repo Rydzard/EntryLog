@@ -107,6 +107,7 @@ const employeeContent = `
 
             <p>Do kedy</p>
             <input type="date" id="date_id" disabled>
+            <input type="time" id="time_id" disabled>
 
             <p>Dôvod</p>
             <input type="text" id="why_id" disabled>
