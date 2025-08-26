@@ -23,8 +23,8 @@ function load_guests_table() {
             // Pridanie tlačidla do posledného stĺpca
             for (let i = 1; i < table.rows.length; i++) { // začína od 1, preskočí hlavičku
                 const guestId = table.rows[i].cells[0].textContent; // ID stále vieme z prvého stĺpca
-                const guestChip = table.rows[i].cells[6].textContent;
-                const actionCell = table.rows[i].cells[8]; // 8. stĺpec, kde chceme tlačidlo
+                const guestChip = table.rows[i].cells[5].textContent;
+                const actionCell = table.rows[i].cells[7]; // 8. stĺpec, kde chceme tlačidlo
                 const btn = document.createElement("button");
                 btn.innerHTML = `<img src="static/icon/bin.svg" width="20" height="20" class="icon">`;
                 btn.onclick = () => deleteGuest(guestId, guestChip);
@@ -65,8 +65,8 @@ function reload_guests_table() {
             // Pridanie tlačidla do posledného stĺpca
             for (let i = 1; i < table.rows.length; i++) { // začína od 1, preskočí hlavičku
                 const guestId = table.rows[i].cells[0].textContent; // ID stále vieme z prvého stĺpca
-                const guestChip = table.rows[i].cells[6].textContent;
-                const actionCell = table.rows[i].cells[8]; // 8. stĺpec, kde chceme tlačidlo
+                const guestChip = table.rows[i].cells[5].textContent;
+                const actionCell = table.rows[i].cells[7]; // 8. stĺpec, kde chceme tlačidlo
                 const btn = document.createElement("button");
                 btn.innerHTML = `<img src="static/icon/bin.svg" width="20" height="20" class="icon">`;
                 btn.onclick = () => deleteGuest(guestId, guestChip);
@@ -111,8 +111,8 @@ function search_guest_button() {
             // Pridanie tlačidla do posledného stĺpca
             for (let i = 1; i < table.rows.length; i++) { // začína od 1, preskočí hlavičku
                 const guestId = table.rows[i].cells[0].textContent; // ID stále vieme z prvého stĺpca
-                const guestChip = table.rows[i].cells[6].textContent;
-                const actionCell = table.rows[i].cells[8]; // 8. stĺpec, kde chceme tlačidlo
+                const guestChip = table.rows[i].cells[5].textContent;
+                const actionCell = table.rows[i].cells[7]; // 8. stĺpec, kde chceme tlačidlo
                 const btn = document.createElement("button");
                 btn.innerHTML = `<img src="static/icon/bin.svg" width="20" height="20" class="icon">`;
                 btn.onclick = () => deleteGuest(guestId, guestChip);

@@ -15,7 +15,6 @@ def add_guest():
         
         name = data['name']
         who = data['who']
-        date = data['formattedDate']
         why = data['why']
         currentTime = data['currentTime'] 
         chip_number = data['chip']
@@ -42,11 +41,11 @@ def add_guest():
 
 
         insert_query = sql.SQL('''
-            INSERT INTO Hostia ("meno", "zamestnanec", "prichod", "odchod", "preco", "cip", "vydal")
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO Hostia ("meno", "zamestnanec", "prichod", "preco", "cip", "vydal")
+            VALUES (%s, %s, %s, %s, %s, %s)
         ''')
         
-        cur.execute(insert_query, (name, who, currentTime, date, why, chip_number,vratnik))
+        cur.execute(insert_query, (name, who, currentTime, why, chip_number,vratnik))
         conn.commit()
         
         cur.close()
@@ -61,9 +60,9 @@ def add_guest():
 def load_guests():
     conn = connect_to_database()
     try:
-        df = pd.read_sql('SELECT id, meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM hostia ORDER BY prichod DESC;', conn)
+        df = pd.read_sql('SELECT id, meno, zamestnanec, prichod, preco, cip, vydal FROM hostia ORDER BY id DESC;', conn)
         # Premenovanie stĺpcov na vlastné názvy
-        df.columns = ["ID", "Meno", "Zamestnanec", "Príchod", "Odchod", "Dôvod", "Čip", "Vydal"]
+        df.columns = ["ID", "Meno", "Zamestnanec", "Príchod", "Dôvod", "Čip", "Vydal"]
 
         # Pridať prázdny stĺpec, ak je treba
         df[""] = ""
@@ -87,7 +86,7 @@ def load_history():
          # Premenovanie stĺpcov na vlastné názvy
 
         df = pd.read_sql('SELECT Meno, Cas, cip, vydal FROM historia ORDER BY cas DESC;', conn)
-        df.columns = [ "Meno", "Čas", "Čip", "Vydal"]
+        df.columns = [ "Meno", "Odchod", "Čip", "Vydal"]
         html_table = df.to_html(escape=True, index=False, table_id="table_of_history")
         return html_table, 200
     except Exception as e:
@@ -153,7 +152,7 @@ def search_guests():
         cur.close()
         conn.close()
 
-        df = pd.DataFrame(rows, columns=["ID","Meno", "Zamestnanec", "Príchod", "Odchod" , "Dôvod", "Čip", "Vydal"])
+        df = pd.DataFrame(rows, columns=["ID","Meno", "Zamestnanec", "Príchod", "Dôvod", "Čip", "Vydal"])
         df[""] = ""
         html_table = df.to_html(escape=True, index=False, table_id="table_of_guests")
 
@@ -187,7 +186,7 @@ def delete_guests():
         conn.commit()
 
         # 3. Načítaj aktualizovaný zoznam hostí
-        cur.execute("SELECT meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM Hostia")
+        cur.execute("SELECT meno, zamestnanec, prichod, preco, cip, vydal FROM Hostia")
         rows = cur.fetchall()
         columns = [desc[0] for desc in cur.description]
 
@@ -222,13 +221,16 @@ def delete_guests_by_id():
         # 1. Zmaž hosťa podľa čipu alebo textu
         cur.execute("DELETE FROM Hostia WHERE id = %s", (guest_to_delete,))
 
+        print("Toto je čislo alebo text")
+        print(guest_to_delete)
+
         #pridat do historie ex navstevnika
         add_history(chip_to_delete)
         # 2. Ulož zmenu
         conn.commit()
 
         # 3. Načítaj aktualizovaný zoznam hostí
-        cur.execute("SELECT meno, zamestnanec, prichod, odchod, preco, cip, vydal FROM Hostia")
+        cur.execute("SELECT meno, zamestnanec, prichod, preco, cip, vydal FROM Hostia")
         rows = cur.fetchall()
         columns = [desc[0] for desc in cur.description]
 

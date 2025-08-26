@@ -3,24 +3,14 @@ function add_guest() {
     // získanie údajov zo vstupu
     var name = document.getElementById("name_id").value.trim();
     var who = document.getElementById("who_id").value.trim();
-    var dateStr = document.getElementById("date_id").value.trim();
     var why = document.getElementById("why_id").value.trim();
     var currentTime = getCurrentTime().toString();
-    var time = document.getElementById("time_id").value.trim();
 
     // overenie vstupov
-    if (!name || !currentTime || !who || !dateStr || !why || !time) {
+    if (!name || !currentTime || !who || !why) {
         alert("Zadaj všetky povinné údaje (meno, kto pozval, dátum a dôvod)");
         return; // zastaví funkciu, ak údaje chýbajú
     }
-
-    // prevod reťazca na objekt Date
-    var date = new Date(dateStr);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-    const year = date.getFullYear();
-
-    var formattedDate = `${day}.${month}.${year} ${time}`;
 
     const isChecked = document.getElementById('registration_checkbox').checked;
 
@@ -43,7 +33,7 @@ function add_guest() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ name, who, currentTime, formattedDate, why, chip })  // Kratšia verzia zápisu (ES6)
+        body: JSON.stringify({ name, who, currentTime, why, chip })  // Kratšia verzia zápisu (ES6)
     })
         .then(response => {
             if (response.status === 401) {

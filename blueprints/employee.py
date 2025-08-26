@@ -208,7 +208,7 @@ def load_keys_database():
         cur = conn.cursor()
 
         # Načítaj všetky údaje z tabuľky Kluce
-        cur.execute("SELECT Kluc, Meno, Preco, Cas, vydal FROM Kluce")
+        cur.execute("SELECT Kluc, Meno, Preco, Cas, vydal FROM Kluce ORDER BY Cas ASC")
         rows = cur.fetchall()
 
         # Konverzia na DataFrame pre HTML tabuľku
@@ -262,7 +262,7 @@ def load_history_keys():
         rows = cur.fetchall()
 
         # Konverzia na DataFrame pre HTML tabuľku
-        df = pd.DataFrame(rows, columns=["Klúč", "Meno", "Kedy", "Vydal"])
+        df = pd.DataFrame(rows, columns=["Klúč", "Meno", "Kedy", "Odovzdal"])
         html_table = df.to_html(escape=True, index=False, table_id="table_of_history")
 
         cur.close()
@@ -274,35 +274,36 @@ def load_history_keys():
         return jsonify({"status": "error", "message": str(e)}), 500
     
 
-def add_history_keys(name,key,vratnik):
+def add_history_keys(name, key, vratnik):
+    conn = None
+    cur = None
     try:
         conn = connect_to_database()
         cur = conn.cursor()
 
-        print(name , key, vratnik)
-
-         # Načítaj všetky údaje z tabuľky Kluce
-        cur.execute("SELECT Kluc, Meno, Cas, Vydal FROM Kluce")
-
-        result = cur.fetchone()
-
-        if result is None:
-            print("Hosť s daným klucom nebol nájdený v databáze.")
-            return
+        print(name, key, vratnik)
 
         time_for_return = datetime.now()
         formatted_time = time_for_return.strftime("%d.%m.%Y %H:%M:%S")
 
+        # Pridaj záznam do histórie
         cur.execute(
             "INSERT INTO historia_kluce (Kluc, Meno, Cas, Vydal) VALUES (%s, %s, %s, %s)",
             (key, name, formatted_time, vratnik)
         )
         conn.commit()
 
-        cur.close()
-        conn.close()
+        return jsonify({"status": "success", "message": "Záznam pridaný"}), 200
+
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+
     
 
 @employee_bp.route('/api/search_employee_on_history', methods=['POST'])

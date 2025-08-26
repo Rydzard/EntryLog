@@ -204,10 +204,6 @@ const registrationContent = `
 
             <p>Za kým</p>
             <input id="who_id" placeholder="Meno zamestnanca"> 
-
-            <p>Do kedy</p>
-            <input type="date" id="date_id"> 
-            <input type="time" id="time_id">
             
             <p>Dôvod</p>
             <select id="why_id">
