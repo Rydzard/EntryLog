@@ -12,7 +12,7 @@ def init_db():
             cas VARCHAR(50) NOT NULL,
             cip TEXT,
             vydal TEXT NOT NULL,
-            prichod VARCHAR(50) NOT NULL,
+            prichod VARCHAR(50) NOT NULL
         )
     """)
 
@@ -24,7 +24,7 @@ def init_db():
             cas VARCHAR(50) NOT NULL,
             kluc TEXT NOT NULL,
             vydal TEXT NOT NULL,
-            prichod VARCHAR(50) NOT NULL,
+            prichod VARCHAR(50) NOT NULL
         )
     """)
 
@@ -50,7 +50,7 @@ def init_db():
             preco VARCHAR(50) NOT NULL,
             cas VARCHAR(50) NOT NULL,
             vydal TEXT NOT NULL,
-            prichod VARCHAR(50) NOT NULL,
+            prichod VARCHAR(50) NOT NULL
         )
     """)
 

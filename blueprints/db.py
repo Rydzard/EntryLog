@@ -5,7 +5,7 @@ def connect_to_database():
         dbname='mydatabase',
         user='myuser',
         password='mypassword',
-        host='192.168.51.44',
+        host='192.168.51.43',
         port='5432'
     )
     return conn
