@@ -1,4 +1,4 @@
-# IMET_project
+# EntryLog
 
 # Flask + PostgreSQL Webová Aplikácia
 
