@@ -74,6 +74,10 @@ http://localhost:8080/
 
 Link sa nastavuje v docker-compose.yaml súbore, ale zatiaľ je tam defaultne na lokálnej IP adresne 127.0.0.1:8080. V admineri sa dá sledovať databáza, prenastavovať struktúru databazy, poprípade pridat zamestnanca (da sa aj pomocou importu CSV súboru s údajmi)
 
+## Poznámka
+Ja som poslal aj na disk CSV príklad dát vratnikov a zamestnancov do databázy, takže cez adminer sa da naimportovať tieto csv súbory pre vyskusanie.
+A ked sa budú pridávať vrátnici, tak som spravil maly kod čo zahashuje čip čo ma zadať, potom len stačí skopírovať cely ten hash "script..." a dať to do tabulky.
+
 
 ## 2. možnosť
 ### Lokálna inštalácia
